@@ -24,7 +24,14 @@ spring:
       pool-prepared-statements: true
       max-open-prepared-statements: 20
 
-
+config:
+  jwt:
+    # 加密秘钥
+    secret: c771348502e241e69b7f66be45a6345a
+    # token有效时长（秒）
+    expire: 3600
+    # header名称
+    header: token
 
 
 
