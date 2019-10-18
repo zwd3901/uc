@@ -13,25 +13,30 @@ import java.util.Date;
 
 /**
  * @author zwd
+ * 系统接管的用户
+ * // todo 属性待完善
  */
 @Entity
 @Table(name="t_user")
 @Data
 public class User extends BaseEntity {
     @Id
-    @Column(name = "id", unique = true, nullable = false)
+    //@Column(name = "id", unique = true, nullable = false)
     private String id;
 
-    @Column(name="login_name",unique = true)
+    @Column(name="login_name", unique = true)
     private String loginName;
 
     @Column(name="login_password")
     private String loginPassword;
 
-    @Column(name = "age")
-    private int age;
+    @Column(name = "real_name", nullable = false)
+    private String realName;
 
-    @Column(name = "create_time", insertable = false, updatable = false)
-    private Date createTime;
+    @Column(name = "telephone", nullable = false)
+    private String telephone;
+
+    @Column(name = "work_place", nullable = false)
+    private String workPlace;
 
 }

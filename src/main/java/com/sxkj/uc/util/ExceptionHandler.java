@@ -13,7 +13,6 @@ public class ExceptionHandler {
     @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     @ResponseBody
     public CustomResult handleException(HttpServletRequest request, Exception e) {
-        CustomResult result;
         log.error("exception error:{}", e);
         return CustomResultUtil.fail(e.getMessage(),e.getCause().toString());
     }

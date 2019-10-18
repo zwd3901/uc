@@ -3,6 +3,7 @@ package com.sxkj.uc.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.util.Date;
  * @author zwd
  */
 @Component
+@Slf4j
 public class JwtConfig {
 
     @Value("${config.jwt.secret}")
@@ -35,7 +37,7 @@ public class JwtConfig {
                 .setSubject(id)
                 .setIssuedAt(new Date(current))
                 .setExpiration(new Date(expireDate))
-                .signWith(SignatureAlgorithm.ES256, secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
 
     }

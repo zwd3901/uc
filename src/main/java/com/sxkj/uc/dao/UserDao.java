@@ -24,11 +24,10 @@ public class UserDao {
     public String create(User user) {
         String id = UUIDGenerator.generator();
         user.setId(id);
+        user.setLoginPassword(MD5.getMD5(user.getLoginName()+user.getLoginPassword()));
         try {
-            String sqls = new SqlUtil(user).insert();
-            System.out.println(sqls);
-
-            jdbcTemplate.update(sqls);
+            String sql = new SqlUtil().insert(user);
+            jdbcTemplate.update(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }

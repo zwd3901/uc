@@ -34,7 +34,7 @@ public class LoginService {
         if (user == null) {
             return null;
         }else{
-            String password = MD5.getMD5(loginPassword);
+            String password = MD5.getMD5(loginName+loginPassword);
             if(password.equals(user.getLoginPassword())){
                 return user;
             }else{
