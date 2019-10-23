@@ -15,8 +15,7 @@ import javax.persistence.Table;
 @Table(name = "t_app")
 @Data
 public class App extends BaseEntity {
-    @Id
-    private String id;
+
     @Column(name = "name",unique = true)
     private String name;
     @Column(name = "url",unique = true)

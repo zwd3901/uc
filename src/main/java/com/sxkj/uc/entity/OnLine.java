@@ -1,6 +1,7 @@
 package com.sxkj.uc.entity;
 
 import com.sxkj.uc.entity.base.BaseEntity;
+import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -12,6 +13,7 @@ import java.util.Date;
  * 在线用户
  */
 @Table(name = "t_on_line")
+@Data
 public class OnLine extends BaseEntity {
     @Id
     private String id;

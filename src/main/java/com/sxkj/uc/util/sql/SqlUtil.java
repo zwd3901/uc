@@ -437,6 +437,7 @@ public class SqlUtil {
         sql = new SqlUtil().findByPrimaryKey(user);
         sql = new SqlUtil().deleteByPrimaryKey(user);
         sql = new SqlUtil().findList(user);
+        sql = new SqlUtil().findList(new User());
     }
 
     @Data

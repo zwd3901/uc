@@ -1,7 +1,10 @@
 package com.sxkj.mock;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.Random;
 
+@Slf4j
 public class Mock {
     private static final String[] en_first = {"James", "John", "Robert", "Michael", "William",
             "David", "Richard", "Charles", "Joseph", "Thomas",
@@ -37,7 +40,9 @@ public class Mock {
      */
     public static String getEnFirst(){
         Random random = new Random();
-        return en_first[random.nextInt(en_first.length)];
+        String s = en_first[random.nextInt(en_first.length)];
+        log.info("enFirst is : {}",s);
+        return s;
     }
 
     /**
@@ -46,7 +51,9 @@ public class Mock {
      */
     public static String getEnLast() {
         Random random = new Random();
-        return en_last[random.nextInt(en_last.length)];
+        String s = en_last[random.nextInt(en_last.length)];
+        log.info("enLast is : {}",s);
+        return s;
     }
 
     /**
@@ -65,6 +72,7 @@ public class Mock {
         Random random = new Random();
         String xing = cn_first[random.nextInt(cn_first.length)];
         String ming = cn_last[random.nextInt(cn_last.length)];
+        log.info("cnName is : {}",xing+ming);
         return xing+ming;
     }
 
@@ -85,6 +93,7 @@ public class Mock {
             }
             sb.append(s.substring(r-1,r));
         }
+        log.info("cnText is : {}",sb.toString());
         return sb.toString();
     }
     private static String getChar(){
@@ -110,6 +119,7 @@ public class Mock {
             }
             sb.append(getChar());
         }
+        log.info("enWord is : {}",sb);
         return sb.toString();
     }
 
@@ -128,6 +138,7 @@ public class Mock {
             }
             sb.append(getEnWord(min,max));
         }
+        log.info("enText is : {}",sb);
         return sb.toString();
     }
 

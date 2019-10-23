@@ -78,6 +78,7 @@ public class AppController implements BaseController<App> {
     @Override
     @DeleteMapping("/remove")
     public CustomResult remove(@RequestBody App app) {
-        return CustomResultUtil.success(appService.deleteByPrimaryKey(app));
+        appService.deleteByPrimaryKey(app);
+        return CustomResultUtil.success();
     }
 }

@@ -3,6 +3,7 @@ package com.sxkj.uc.entity.base;
 import lombok.Data;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
@@ -12,6 +13,8 @@ import java.io.Serializable;
  */
 @Data
 public class BaseEntity implements Serializable {
+    @Id
+    private String id;
     /** 备注 */
     @Column(name = "remark")
     private String remark = "";

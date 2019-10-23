@@ -1,6 +1,7 @@
 package com.sxkj.uc.entity;
 
 import com.sxkj.uc.entity.base.BaseEntity;
+import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -12,9 +13,9 @@ import javax.persistence.Table;
  * // todo 属性待完善
  */
 @Table(name = "t_user_app")
+@Data
 public class UserApp extends BaseEntity {
-    @Id
-    private String id;
+
     @Column(name = "user_id",nullable = false)
     private String userId;
     @Column(name = "app_id", nullable = false)
