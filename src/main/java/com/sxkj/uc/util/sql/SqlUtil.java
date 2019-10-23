@@ -103,13 +103,47 @@ public class SqlUtil {
         return sql;
     }
 
+
+    public String findList(Object object) throws Exception{
+        TableModel tableModel = parseEntity(object);
+        if(tableModel==null){
+            throw new RuntimeException("table name is empty");
+        }
+        String tableName = tableModel.getTableName();
+        Map<String, FieldModel> fieldMap = tableModel.getFieldMap();
+        StringBuilder sb = new StringBuilder();
+        StringBuilder pks = new StringBuilder();
+        for (Map.Entry<String, FieldModel> map : fieldMap.entrySet()) {
+            FieldModel fieldModel = map.getValue();
+            String entityFieldName = fieldModel.getEntityFieldName();
+            String tableFieldName = fieldModel.getTableFieldName();
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            sb.append(tableFieldName).append(" AS ").append(entityFieldName);
+            Object value = getFieldValue(object, entityFieldName);
+            if (value != null && !"".equals(value.toString())) {
+                if(pks.length()>0){
+                    pks.append(" and ");
+                }
+                pks.append(tableFieldName).append("='")
+                        .append(getFieldValue(object,entityFieldName)).append("'");
+            }
+        }
+        String sql = "SELECT "+sb.toString() +" FROM "+ tableName ;
+        if (pks.length() > 0) {
+            sql = "SELECT "+sb.toString() +" FROM "+ tableName + " WHERE "+ pks.toString();
+        }
+        log.info(sql);
+        return sql;
+    }
     /**
      * 根据主键查找单条记录
      * @param object
      * @return
      * @throws Exception
      */
-    public String findById(Object object) throws Exception{
+    public String findByPrimaryKey(Object object) throws Exception{
         TableModel tableModel = parseEntity(object);
         if(tableModel==null){
             throw new RuntimeException("table name is empty");
@@ -126,7 +160,7 @@ public class SqlUtil {
             if (sb.length() > 0) {
                 sb.append(",");
             }
-            sb.append(tableFieldName);
+            sb.append(tableFieldName).append(" AS ").append(entityFieldName);
             if (idFieldList.contains(entityFieldName)){
                 if(pks.length()>0){
                     pks.append(" and ");
@@ -141,12 +175,12 @@ public class SqlUtil {
     }
 
     /**
-     * 根据主键删除记录
+     * 根据主键物理删除记录
      * @param object
      * @return
      * @throws Exception
      */
-    public String delete(Object object) throws Exception{
+    public String deleteByPrimaryKey(Object object) throws Exception{
         TableModel tableModel = parseEntity(object);
         if(tableModel==null){
             throw new RuntimeException("table name is empty");
@@ -163,14 +197,57 @@ public class SqlUtil {
                 if(pks.length()>0){
                     pks.append(" and ");
                 }
-                pks.append(tableFieldName).append("='")
-                        .append(getFieldValue(object,entityFieldName)).append("'");
+                Object value = getFieldValue(object,entityFieldName);
+                if (value == null || "".equals(value.toString())) {
+                    throw new RuntimeException("primary key not empty !");
+                }
+                pks.append(tableFieldName).append("='").append(value).append("'");
             }
         }
         if (pks.length() <= 0) {
             throw new RuntimeException("no where condition");
         }
         String sql = "DELETE FROM "+ tableName + " WHERE "+ pks.toString();
+        log.info(sql);
+        return sql;
+    }
+
+    /**
+     * 根据主键逻辑删除记录
+     * @param object                对象实例，已经为主键赋值
+     * @param dataStatusFieldName   标识数据状态的列名
+     * @param dataStatusValue       标识数据被删除的状态值
+     * @return
+     * @throws Exception
+     */
+    public String logicRemoveByPrimaryKey(Object object,String dataStatusFieldName,String dataStatusValue) throws Exception{
+        TableModel tableModel = parseEntity(object);
+        if(tableModel==null){
+            throw new RuntimeException("table name is empty");
+        }
+        String tableName = tableModel.getTableName();
+        List<String> idFieldList = tableModel.getIdList();
+        Map<String, FieldModel> fieldMap = tableModel.getFieldMap();
+        StringBuilder pks = new StringBuilder();
+        for (Map.Entry<String, FieldModel> map : fieldMap.entrySet()) {
+            FieldModel fieldModel = map.getValue();
+            String entityFieldName = fieldModel.getEntityFieldName();
+            String tableFieldName = fieldModel.getTableFieldName();
+            if (idFieldList.contains(entityFieldName)){
+                if(pks.length()>0){
+                    pks.append(" and ");
+                }
+                Object value = getFieldValue(object,entityFieldName);
+                if (value == null || "".equals(value.toString())) {
+                    throw new RuntimeException("primary key value is empty");
+                }
+                pks.append(tableFieldName).append("='").append(value).append("'");
+            }
+        }
+        if (pks.length() <= 0) {
+            throw new RuntimeException("no where condition");
+        }
+        String sql = "UPDATE " + tableName + " SET " + dataStatusFieldName + "='" + dataStatusValue + "' WHERE " + pks.toString();
         log.info(sql);
         return sql;
     }
@@ -357,8 +434,9 @@ public class SqlUtil {
 
         String sql = new SqlUtil().insert(user);
         sql = new SqlUtil().updateByPrimaryKey(user);
-        sql = new SqlUtil().findById(user);
-        sql = new SqlUtil().delete(user);
+        sql = new SqlUtil().findByPrimaryKey(user);
+        sql = new SqlUtil().deleteByPrimaryKey(user);
+        sql = new SqlUtil().findList(user);
     }
 
     @Data

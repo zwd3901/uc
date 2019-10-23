@@ -14,6 +14,6 @@ public class ExceptionHandler {
     @ResponseBody
     public CustomResult handleException(HttpServletRequest request, Exception e) {
         log.error("exception error:{}", e);
-        return CustomResultUtil.fail(e.getMessage(),e.getCause().toString());
+        return CustomResultUtil.fail(CustomResultCodeEnum.EXCEPTION.getCode(),e.getCause().toString());
     }
 }

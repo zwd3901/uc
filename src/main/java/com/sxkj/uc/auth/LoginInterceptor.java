@@ -39,7 +39,7 @@ public class LoginInterceptor implements HandlerInterceptor {
         System.out.println("getRequestURL:" + request.getRequestURL());
         System.out.println("getRealPath:" + request.getSession().getServletContext().getRealPath("image"));
         String token = request.getHeader(header);
-        if (token == null || "".equals(token)) {
+        /*if (token == null || "".equals(token)) {
             token = request.getParameter(header);
         }
         if (token == null || "".equals(token)) {
@@ -52,7 +52,7 @@ public class LoginInterceptor implements HandlerInterceptor {
             System.err.println(jwtConfig.refreshToken(token));
         }
 
-        request.setAttribute("id", claims.getSubject());
+        request.setAttribute("id", claims.getSubject());*/
 
         return true;
 

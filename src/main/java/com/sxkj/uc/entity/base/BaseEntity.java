@@ -1,11 +1,9 @@
 package com.sxkj.uc.entity.base;
 
-import com.sun.xml.internal.ws.developer.Serialization;
 import lombok.Data;
 
 import javax.persistence.Column;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author zwd
@@ -24,7 +22,7 @@ public class BaseEntity implements Serializable {
     @Column(name="create_id", updatable = false)
     private String createId = "";
     /** 数据最后修改人 */
-    @Column(name = "update_id")
+    @Column(name = "last_update_id")
     private String updateId = "";
 
 }

@@ -39,4 +39,7 @@ public class User extends BaseEntity {
     @Column(name = "work_place", nullable = false)
     private String workPlace;
 
+    /** 重定向地址 */
+    private String redirect;
+
 }
