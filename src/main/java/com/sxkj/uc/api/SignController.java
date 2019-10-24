@@ -1,11 +1,11 @@
-package com.sxkj.uc;
+package com.sxkj.uc.api;
 
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.jwt.JwtConfig;
 import com.sxkj.uc.service.LoginService;
 import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.CustomResult;
-import com.sxkj.uc.util.CustomResultCodeEnum;
+import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import com.sxkj.uc.util.CustomResultUtil;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.util.Map;
 
 /**
  * @author zwd
- * 注册、登录、退出
+ * 登录、退出
  */
 @RestController
 @RequestMapping("/api/sign")
@@ -34,19 +34,6 @@ public class SignController {
 
     @Value("${config.jwt.header}")
     private String header;
-
-    /**
-     * 用户注册
-     * @param user
-     * @return
-     */
-    @PostMapping("/add")
-    public CustomResult signUp(@RequestBody User user){
-        String id = userService.createUser(user);
-        user.setId(id);
-
-        return CustomResultUtil.success(user);
-    }
 
     /**
      * 登录

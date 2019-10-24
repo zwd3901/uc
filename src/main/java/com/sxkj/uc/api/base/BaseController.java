@@ -2,12 +2,10 @@ package com.sxkj.uc.api.base;
 
 import com.sxkj.uc.entity.base.BaseEntity;
 import com.sxkj.uc.util.CustomResult;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author zwd
  */
-@RestController
 public interface BaseController<T extends BaseEntity> {
     /**
      * 新增

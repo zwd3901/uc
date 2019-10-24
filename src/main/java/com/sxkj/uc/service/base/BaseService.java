@@ -15,7 +15,7 @@ import java.util.Map;
  */
 @Service
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public abstract class BaseService<T extends BaseEntity> {
+public class BaseService<T extends BaseEntity> {
     @Autowired
     private BaseDao<T> baseDao;
     /**
@@ -35,7 +35,9 @@ public abstract class BaseService<T extends BaseEntity> {
      */
     @Transactional(rollbackFor = Exception.class)
     public T updateByPrimaryKey(T t){
-        return baseDao.updateByPrimaryKey(t);
+        T tt = baseDao.updateByPrimaryKey(t);
+        System.err.println(4/0);
+        return tt;
     }
 
     /**
@@ -43,7 +45,11 @@ public abstract class BaseService<T extends BaseEntity> {
      * @param t
      * @return
      */
-    public Map<String, Object> findByPrimaryKey(T t){
+    public Map<String, Object> findMapByPrimaryKey(T t){
+        return baseDao.findMapByPrimaryKey(t);
+    }
+
+    public T findByPrimaryKey(T t){
         return baseDao.findByPrimaryKey(t);
     }
 

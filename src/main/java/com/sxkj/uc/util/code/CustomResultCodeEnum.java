@@ -1,4 +1,4 @@
-package com.sxkj.uc.util;
+package com.sxkj.uc.util.code;
 
 public enum CustomResultCodeEnum {
     SUCCESS("0000","操作成功"),FAIL("0001","操作失败"),

@@ -1,5 +1,6 @@
 package com.sxkj.uc.util;
 
+import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ResponseBody;

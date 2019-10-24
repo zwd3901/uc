@@ -1,16 +1,17 @@
 package com.sxkj.uc.dao.base;
 
 import com.sxkj.uc.entity.base.BaseEntity;
-import com.sxkj.uc.util.CustomResultCodeEnum;
+import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import com.sxkj.uc.util.UUIDGenerator;
 import com.sxkj.uc.util.sql.SqlUtil;
-import javafx.beans.property.adapter.ReadOnlyJavaBeanBooleanProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.BeanUtils;
+import org.hibernate.sql.OracleJoinFragment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,7 +69,7 @@ public class BaseDao<T extends BaseEntity> {
      * @param t
      * @return
      */
-    public Map<String,Object> findByPrimaryKey(T t) {
+    public Map<String,Object> findMapByPrimaryKey(T t) {
         try {
             if (t.getId() == null || "".equals(t.getId())) {
                 throw new RuntimeException("id is empty ");
@@ -76,6 +77,22 @@ public class BaseDao<T extends BaseEntity> {
             String sql = new SqlUtil().findByPrimaryKey(t);
             log.info("select data : {}", sql);
             return jdbcTemplate.queryForMap(sql);
+        } catch (Exception e) {
+            log.error(e.getMessage(),e.getCause());
+        }
+        return null;
+    }
+
+    public T findByPrimaryKey(T t) {
+        try {
+            if (t.getId() == null || "".equals(t.getId())) {
+                throw new RuntimeException("id is empty ");
+            }
+            String sql = new SqlUtil().findByPrimaryKey(t);
+            log.info("select data : {}", sql);
+            Map<String, Object> map = jdbcTemplate.queryForMap(sql);
+            BeanUtils.populate(t,map);
+            return t;
         } catch (Exception e) {
             log.error(e.getMessage(),e.getCause());
         }

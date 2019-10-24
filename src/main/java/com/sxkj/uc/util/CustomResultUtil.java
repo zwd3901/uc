@@ -1,5 +1,7 @@
 package com.sxkj.uc.util;
 
+import com.sxkj.uc.util.code.CustomResultCodeEnum;
+
 public class CustomResultUtil {
 
     /**

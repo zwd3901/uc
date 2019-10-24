@@ -9,7 +9,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author zwd
@@ -20,9 +22,6 @@ import java.util.Date;
 @Table(name="t_user")
 @Data
 public class User extends BaseEntity {
-    @Id
-    //@Column(name = "id", unique = true, nullable = false)
-    private String id;
 
     @Column(name="login_name", unique = true)
     private String loginName;
@@ -34,12 +33,14 @@ public class User extends BaseEntity {
     private String realName;
 
     @Column(name = "telephone", nullable = false)
-    private String telephone;
+    private String telephone = "";
 
     @Column(name = "work_place", nullable = false)
-    private String workPlace;
+    private String workPlace = "";
 
     /** 重定向地址 */
-    private String redirect;
+    private String redirect = "";
+    /** 可访问应用 */
+    private List<App> appList = new ArrayList<>(16);
 
 }

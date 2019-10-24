@@ -1,7 +1,10 @@
 package com.sxkj.uc.api;
 
+import com.sxkj.uc.api.base.BaseController;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.UserService;
+import com.sxkj.uc.util.CustomResult;
+import com.sxkj.uc.util.CustomResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,26 +14,72 @@ import java.util.Map;
 
 /**
  * @author zwd
+ * 创建、编辑、查找、删除、修改密码
  */
 @RestController
 @RequestMapping("/api/user")
 @Slf4j
-public class UserController {
+public class UserController implements BaseController<User> {
     @Autowired
     private UserService userService;
 
-    @PutMapping("/edit")
-    public Map<String,Object> editUser(@RequestBody User user){
-        Map<String,Object> map = new HashMap<>(2);
-        try {
-            String id = userService.createUser(user);
-            map.put("id",id);
-            map.put("msg","success");
-        } catch (Exception e) {
-            e.printStackTrace();
-            map.put("msg",e.getMessage());
-            log.error(e.getMessage(),e.getCause());
-        }
-        return map;
+    /**
+     * 创建用户
+     * @param user
+     * @return
+     */
+    @Override
+    @PostMapping("/create")
+    public CustomResult create(@RequestBody User user) {
+        return CustomResultUtil.success(userService.insert(user));
+    }
+
+    /**
+     * 编辑用户信息，不包括登录名和登录密码
+     * @param user
+     * @return
+     */
+    @Override
+    public CustomResult edit(User user) {
+        return CustomResultUtil.success(userService.updateByPrimaryKey(user));
+    }
+
+    /**
+     * 获取单个用户信息
+     * @param user
+     * @return
+     */
+    @Override
+    public CustomResult find(User user) {
+        return CustomResultUtil.success(userService.findByPrimaryKey(user));
+    }
+
+    /**
+     * 根据条件获取用户信息
+     * @param user
+     * @return
+     */
+    @Override
+    public CustomResult findList(User user) {
+        return CustomResultUtil.success(userService.findList(user));
+    }
+
+    /**
+     * 移除某个用户
+     * @param user
+     * @return
+     */
+    @Override
+    public CustomResult remove(User user) {
+        return CustomResultUtil.success();
+    }
+
+    /**
+     * 修改密码
+     * @param user
+     * @return
+     */
+    public CustomResult editPassword(User user) {
+        return CustomResultUtil.success(userService.updatePassword(user));
     }
 }

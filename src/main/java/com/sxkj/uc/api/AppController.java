@@ -58,7 +58,8 @@ public class AppController implements BaseController<App> {
     @Override
     @GetMapping("/find")
     public CustomResult find(@RequestBody App app) {
-        //System.err.println(3/0);
+        App a = appService.findByPrimaryKey(app);
+        System.err.println(a);
         return CustomResultUtil.success(appService.findByPrimaryKey(app));
     }
 

@@ -331,22 +331,19 @@ public class SqlUtil {
      * @param object
      */
     private TableModel parseEntity(Object object) {
-        if(object instanceof BaseEntity){
-            TableModel tableModel = new TableModel();
-            tableModel.setTableName(getTableName(object));
+        TableModel tableModel = new TableModel();
+        tableModel.setTableName(getTableName(object));
 
-            Class clazz = object.getClass();
-            List<Field> fieldList = new ArrayList<>(16);
-            while (clazz != null) {
-                fieldList.addAll(Arrays.asList(clazz.getDeclaredFields()));
-                clazz = clazz.getSuperclass();
-            }
-            tableModel.setIdList(getIdFields(fieldList));
-            tableModel.setFieldMap(getFieldModelMap(fieldList));
-            tableModel.setAllFieldList(fieldList);
-            return tableModel;
+        Class clazz = object.getClass();
+        List<Field> fieldList = new ArrayList<>(16);
+        while (clazz != null) {
+            fieldList.addAll(Arrays.asList(clazz.getDeclaredFields()));
+            clazz = clazz.getSuperclass();
         }
-        throw new RuntimeException("object must extend BaseEntity");
+        tableModel.setIdList(getIdFields(fieldList));
+        tableModel.setFieldMap(getFieldModelMap(fieldList));
+        tableModel.setAllFieldList(fieldList);
+        return tableModel;
     }
 
     /**
@@ -361,12 +358,6 @@ public class SqlUtil {
         Object value = getMethod.invoke(object);
         return value;
     }
-
-
-
-
-
-
 
     /**
      * 字符串首字母大小
@@ -434,10 +425,10 @@ public class SqlUtil {
 
         String sql = new SqlUtil().insert(user);
         sql = new SqlUtil().updateByPrimaryKey(user);
-        sql = new SqlUtil().findByPrimaryKey(user);
+        /*sql = new SqlUtil().findByPrimaryKey(user);
         sql = new SqlUtil().deleteByPrimaryKey(user);
         sql = new SqlUtil().findList(user);
-        sql = new SqlUtil().findList(new User());
+        sql = new SqlUtil().findList(new User());*/
     }
 
     @Data
