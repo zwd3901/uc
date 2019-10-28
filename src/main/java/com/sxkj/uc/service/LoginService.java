@@ -1,5 +1,6 @@
 package com.sxkj.uc.service;
 
+import com.sxkj.uc.dao.AppDao;
 import com.sxkj.uc.dao.UserAppDao;
 import com.sxkj.uc.dao.UserDao;
 import com.sxkj.uc.entity.App;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,19 +24,18 @@ public class LoginService {
     @Autowired
     private UserDao userDao;
     @Autowired
+    private AppDao appDao;
+    @Autowired
     private UserAppDao userAppDao;
 
-
+    /**
+     * 根据登录名查找用户
+     * @param loginName
+     * @return
+     */
     public User findUserByLoginName(String loginName){
-        Map<String, Object> map = userDao.findByLonginName(loginName);
-        if (map != null && !map.isEmpty()) {
-            User user = new User();
-            try {
-                BeanUtils.populate(user, map);
-            } catch (Exception e) {
-                log.error(e.getMessage(),e.getCause());
-            }
-        }else {
+        User user = userDao.findByLonginName(loginName);
+        if (user != null) {
             UserApp userApp = new UserApp();
             userApp.setLoginName(loginName);
             List<Map<String, Object>> list = userAppDao.findList(userApp);
@@ -49,8 +50,36 @@ public class LoginService {
         return null;
     }
 
+    /**
+     * 用户使用登录名和登录密码登录
+     * @param loginName
+     * @param loginPassword
+     * @return
+     */
     public User signIn(String loginName,String loginPassword) {
-        return null;
+        User user = findUserByLoginName(loginName);
+        List<Map<String, Object>> userAppList ;
+        List<App> appList = new ArrayList<>(16);
+        if (user == null) {
+            UserApp userApp = new UserApp();
+            userApp.setLoginName(loginName);
+            userApp.setLoginPassword(loginPassword);
+            userAppList = userAppDao.findList(userApp);
+            if (userAppList != null && !userAppList.isEmpty()) {
+                user = new User();
+                user.setId(userAppList.get(0).get("userId").toString());
+                user = userDao.findByPrimaryKey(user);
+
+                for(Map<String,Object> map : userAppList){
+                    App app = new App();
+                    app.setId(map.get("appId").toString());
+                    app = appDao.findByPrimaryKey(app);
+                    appList.add(app);
+                }
+                user.setAppList(appList);
+            }
+        }
+        return user;
     }
 
 }

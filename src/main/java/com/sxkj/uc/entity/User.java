@@ -18,7 +18,6 @@ import java.util.List;
  * 系统接管的用户
  * // todo 属性待完善
  */
-@Entity
 @Table(name="t_user")
 @Data
 public class User extends BaseEntity {

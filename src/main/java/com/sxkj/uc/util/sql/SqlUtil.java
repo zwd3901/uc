@@ -213,6 +213,43 @@ public class SqlUtil {
     }
 
     /**
+     * 删除
+     * @param object
+     * @return
+     * @throws Exception
+     */
+    public String delete(Object object) throws Exception{
+        TableModel tableModel = parseEntity(object);
+        if(tableModel==null){
+            throw new RuntimeException("table name is empty");
+        }
+        String tableName = tableModel.getTableName();
+        Map<String, FieldModel> fieldMap = tableModel.getFieldMap();
+        List<String> whereList = new ArrayList<>(16);
+        for (Map.Entry<String, FieldModel> map : fieldMap.entrySet()) {
+            FieldModel fieldModel = map.getValue();
+            String entityFieldName = fieldModel.getEntityFieldName();
+            String tableFieldName = fieldModel.getTableFieldName();
+            Object value = getFieldValue(object,entityFieldName);
+            if (value != null && !"".equals(value.toString())) {
+                whereList.add( tableFieldName + "='"+value.toString()+"'");
+            }
+        }
+        if (whereList.size() <= 0) {
+            throw new RuntimeException("no where condition");
+        }
+        StringBuilder where = new StringBuilder();
+        for (String s : whereList) {
+            if(where.length()>0){
+                where.append(" and ");
+            }
+            where.append(s);
+        }
+        String sql = "DELETE FROM "+ tableName + " WHERE "+ where.toString();
+        log.info(sql);
+        return sql;
+    }
+    /**
      * 根据主键逻辑删除记录
      * @param object                对象实例，已经为主键赋值
      * @param dataStatusFieldName   标识数据状态的列名

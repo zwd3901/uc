@@ -8,6 +8,7 @@ import com.sxkj.uc.util.UUIDGenerator;
 import com.sxkj.uc.util.code.DataStatusEnum;
 import com.sxkj.uc.util.sql.SqlUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -21,14 +22,20 @@ public class UserDao extends BaseDao<User> {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public Map<String,Object> findByLonginName(String loginName) {
+    public User findByLonginName(String loginName) {
         User user = new User();
         user.setLoginName(loginName);
         user.setStatus(DataStatusEnum.USABLE.getCode());
         List<Map<String, Object>> list = findList(user);
 
         if (list != null && !list.isEmpty() && list.size() == 1) {
-            return list.get(0);
+            try {
+                user = new User();
+                BeanUtils.populate(user, list.get(0));
+                return user;
+            } catch (Exception e) {
+                log.error(e.getMessage(),e.getCause());
+            }
         }
         return null;
     }
