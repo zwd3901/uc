@@ -41,7 +41,7 @@ public class SignController {
      * @return
      */
     @GetMapping("/login")
-    public CustomResult signIn(@RequestBody User user) {
+    public CustomResult login(@RequestBody User user) {
         /**
          * 1、在t_user表中根据登录名查找
          * 2、如果找到相关记录，比较登录密码
@@ -58,16 +58,8 @@ public class SignController {
         user = loginService.signIn(user.getLoginName(), user.getLoginPassword());
         if (user == null) {
             return CustomResultUtil.info(CustomResultCodeEnum.LOG_IN_FAIL);
-        }else {
-            Map<String,Object> map = new HashMap(2);
-            String token = jwtConfig.createToken(user.getId());
-            log.info(user.getLoginName()+"==>>"+token);
-            Claims claims = jwtConfig.getTokenClaims(token);
-            log.info(claims.getSubject());
-            map.put(header,token);
-            map.put("user", user);
-            return CustomResultUtil.success(map);
         }
+        return CustomResultUtil.success(user);
     }
 
 }
