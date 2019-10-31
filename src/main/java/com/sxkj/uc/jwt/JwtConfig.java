@@ -1,10 +1,14 @@
 package com.sxkj.uc.jwt;
 
+import com.sxkj.uc.config.JwtParam;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -13,15 +17,9 @@ import java.util.Date;
  * @author zwd
  */
 @Component
-@Slf4j
 public class JwtConfig {
-
-    @Value("${config.jwt.secret}")
-    private String secret;
-    @Value("${config.jwt.expire}")
-    private long expire;
-    @Value("${config.jwt.header}")
-    private String header;
+    @Autowired
+    private JwtParam jwtParam;
 
     /**
      * 根据用户id标识生成token
@@ -32,12 +30,12 @@ public class JwtConfig {
         // 当前时间
         long current = System.currentTimeMillis();
         // 过期时间
-        long expireDate = current + expire * 1000;
+        long expireDate = current + jwtParam.getExpire() * 1000;
         return Jwts.builder()
                 .setSubject(id)
                 .setIssuedAt(new Date(current))
                 .setExpiration(new Date(expireDate))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .signWith(SignatureAlgorithm.HS256, jwtParam.getSecret())
                 .compact();
 
     }
@@ -49,7 +47,7 @@ public class JwtConfig {
      */
     public Claims getTokenClaims(String token) {
         try {
-            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+            return Jwts.parser().setSigningKey(jwtParam.getSecret()).parseClaimsJws(token).getBody();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -62,7 +60,7 @@ public class JwtConfig {
      * @return false:未失效,true:失效了
      */
     public boolean isExpired(Date expirationTime){
-        return !expirationTime.before(new Date());
+        return expirationTime.before(new Date());
     }
 
     /**

@@ -21,11 +21,19 @@ public class UcApplication  implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration interceptorRegistration = registry.addInterceptor(new LoginInterceptor());
+        InterceptorRegistration interceptorRegistration = registry.addInterceptor(loginInterceptor());
 
-        interceptorRegistration.addPathPatterns("/**");
+        interceptorRegistration.addPathPatterns("/**").excludePathPatterns("/","/api/sign/login");
     }
 
+    /**
+     * 必须添加此方法，否则将无法获取其他注入
+     * @return
+     */
+    @Bean
+    public LoginInterceptor loginInterceptor() {
+        return new LoginInterceptor();
+    }
     /*@Bean
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean bean = new FilterRegistrationBean();

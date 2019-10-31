@@ -9,9 +9,9 @@ import lombok.Data;
 @Data
 public class Block {
     /** 当前块的数字签名 */
-    public String hash;
+    private String hash;
     /** 前一个块的数字签名 */
-    public String preHash;
+    private String preHash;
     /** 区块存放的信息 */
     private String data;
     /** 时间戳 */
@@ -50,6 +50,6 @@ public class Block {
             nonce ++;
             hash = calculateHash();
         }
-        System.out.println("Block Mined !!! "+ hash);
+        System.out.println("Block Mined 成功啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦 !!! "+ hash);
     }
 }

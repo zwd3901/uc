@@ -40,7 +40,8 @@ public class UserController implements BaseController<User> {
      * @return
      */
     @Override
-    public CustomResult edit(User user) {
+    @PutMapping("/edit")
+    public CustomResult edit(@RequestBody User user) {
         return CustomResultUtil.success(userService.updateByPrimaryKey(user));
     }
 
@@ -50,7 +51,8 @@ public class UserController implements BaseController<User> {
      * @return
      */
     @Override
-    public CustomResult find(User user) {
+    @GetMapping("/find")
+    public CustomResult find(@RequestBody User user) {
         return CustomResultUtil.success(userService.findByPrimaryKey(user));
     }
 
@@ -60,7 +62,8 @@ public class UserController implements BaseController<User> {
      * @return
      */
     @Override
-    public CustomResult findList(User user) {
+    @GetMapping("/find/list")
+    public CustomResult findList(@RequestBody User user) {
         return CustomResultUtil.success(userService.findList(user));
     }
 
@@ -70,7 +73,7 @@ public class UserController implements BaseController<User> {
      * @return
      */
     @Override
-    public CustomResult remove(User user) {
+    public CustomResult remove(@RequestBody User user) {
         return CustomResultUtil.success();
     }
 
@@ -79,7 +82,7 @@ public class UserController implements BaseController<User> {
      * @param user
      * @return
      */
-    public CustomResult editPassword(User user) {
+    public CustomResult editPassword(@RequestBody User user) {
         return CustomResultUtil.success(userService.updatePassword(user));
     }
 }

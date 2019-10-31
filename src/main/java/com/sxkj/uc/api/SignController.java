@@ -1,5 +1,6 @@
 package com.sxkj.uc.api;
 
+import com.sxkj.uc.config.JwtParam;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.jwt.JwtConfig;
 import com.sxkj.uc.service.LoginService;
@@ -32,8 +33,8 @@ public class SignController {
     @Autowired
     private JwtConfig jwtConfig;
 
-    @Value("${config.jwt.header}")
-    private String header;
+    @Autowired
+    private JwtParam jwtParam;
 
     /**
      * 登录
@@ -59,7 +60,11 @@ public class SignController {
         if (user == null) {
             return CustomResultUtil.info(CustomResultCodeEnum.LOG_IN_FAIL);
         }
-        return CustomResultUtil.success(user);
+        String token = jwtConfig.createToken(user.getId());
+        Map<String,Object> map = new HashMap<>(16);
+        map.put("user", user);
+        map.put(jwtParam.getHeader(), token);
+        return CustomResultUtil.success(map);
     }
 
 }

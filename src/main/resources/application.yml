@@ -3,6 +3,8 @@ server:
   servlet:
     context-path: /uc # 添加项目名称
 spring:
+  main:
+    allow-bean-definition-overriding: true
   datasource:
     druid:
       name: uc
@@ -32,12 +34,6 @@ config:
     expire: 3600
     # header名称
     header: token
-
-
-
-
-
-
 
 logging:
   level:
