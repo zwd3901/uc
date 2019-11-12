@@ -6,13 +6,9 @@ import com.sxkj.uc.dao.UserDao;
 import com.sxkj.uc.entity.App;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.entity.UserApp;
-import com.sxkj.uc.util.CustomResult;
-import com.sxkj.uc.util.MD5;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;

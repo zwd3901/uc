@@ -1,6 +1,7 @@
 package com.sxkj.uc.api;
 
 import com.sxkj.uc.api.base.BaseController;
+import com.sxkj.uc.auth.aop.Permit;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.CustomResult;
@@ -52,6 +53,7 @@ public class UserController implements BaseController<User> {
      */
     @Override
     @GetMapping("/find")
+    @Permit("Vbeyhgyfk2")
     public CustomResult find(@RequestBody User user) {
         return CustomResultUtil.success(userService.findByPrimaryKey(user));
     }

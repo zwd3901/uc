@@ -29,6 +29,10 @@ public class CustomResultUtil {
         return new CustomResult(CustomResultCodeEnum.FAIL.getCode(),CustomResultCodeEnum.FAIL.getMsg(),null);
     }
 
+    public static CustomResult fail(CustomResultCodeEnum resultCodeEnum) {
+        return new CustomResult(resultCodeEnum.getCode(),resultCodeEnum.getMsg(),null);
+    }
+
     /**
      * 操作失败
      * @param code 状态码

@@ -38,5 +38,7 @@ public class UserAppService extends BaseService<UserApp> {
         }
         return false;
     }
-
+    public List<Map<String,Object>> findAppByUserId(String userId){
+        return userAppDao.findAppByUserId(userId);
+    }
 }

@@ -8,14 +8,11 @@ import com.sxkj.uc.entity.User;
 import com.sxkj.uc.entity.UserApp;
 import com.sxkj.uc.service.base.BaseService;
 import com.sxkj.uc.util.MD5;
-import com.sxkj.uc.util.UUIDGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Id;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +35,7 @@ public class UserService extends BaseService<User> {
      */
     @Override
     public User insert(User user) {
-        user.setLoginPassword(MD5.getMD5(user.getLoginName()+user.getLoginPassword()));
+        user.setLoginPassword(MD5.encode2hex(user.getLoginName()+user.getLoginPassword()));
         try {
             return userDao.insert(user);
         } catch (Exception e) {
@@ -73,7 +70,7 @@ public class UserService extends BaseService<User> {
         User old = new User();
         old.setId(userId);
         old = userDao.findByPrimaryKey(old);
-        old.setLoginPassword(MD5.getMD5(old.getLoginName()+user.getLoginPassword()));
+        old.setLoginPassword(MD5.encode2hex(old.getLoginName()+user.getLoginPassword()));
         return userDao.updateByPrimaryKey(old);
     }
 

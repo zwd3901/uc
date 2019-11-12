@@ -1,6 +1,7 @@
 package com.sxkj.uc.dao;
 
 import com.sxkj.uc.dao.base.BaseDao;
+import com.sxkj.uc.entity.App;
 import com.sxkj.uc.entity.UserApp;
 import com.sxkj.uc.util.UUIDGenerator;
 import com.sxkj.uc.util.sql.SqlUtil;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zwd
@@ -63,5 +65,10 @@ public class UserAppDao extends BaseDao<UserApp> {
             log.error(e.getMessage(),e.getCause());
         }
         return false;
+    }
+
+    public List<Map<String,Object>> findAppByUserId(String userId) {
+        String sql = "select a.id,a.name,a.cn_name,a.url from t_app as a,t_user_app as u where a.id=u.app_id and u.user_id=?";
+        return jdbcTemplate.queryForList(sql, userId);
     }
 }

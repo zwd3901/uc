@@ -5,7 +5,6 @@ import com.sxkj.uc.jwt.JwtConfig;
 import com.sxkj.uc.service.UserService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -28,7 +27,14 @@ public class LoginInterceptor implements HandlerInterceptor {
     private JwtParam jwtParam;
 
 
-
+    /**
+     * 进入业务方法前执行，可用于认证、授权
+     * @param request
+     * @param response
+     * @param obj
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object obj) throws Exception {
         System.out.println("getContextPath:" + request.getContextPath());
@@ -36,12 +42,12 @@ public class LoginInterceptor implements HandlerInterceptor {
         System.out.println("getRequestURI:" + request.getRequestURI());
         System.out.println("getRequestURL:" + request.getRequestURL());
         System.out.println("getRealPath:" + request.getSession().getServletContext().getRealPath("image"));
-        Enumeration headerNames = request.getHeaderNames();
+        /*Enumeration headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String key = (String) headerNames.nextElement();
             String value = request.getHeader(key);
             System.err.println(key+" :: "+value);
-        }
+        }*/
         // 从header中获取token
         String token = request.getHeader(jwtParam.getHeader());
         if (token == null || "".equals(token)) {

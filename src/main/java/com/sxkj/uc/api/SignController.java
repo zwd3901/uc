@@ -1,5 +1,7 @@
 package com.sxkj.uc.api;
 
+import com.sxkj.uc.aop.Anno;
+import com.sxkj.uc.auth.aop.Permit;
 import com.sxkj.uc.config.JwtParam;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.jwt.JwtConfig;
@@ -60,6 +62,7 @@ public class SignController {
         if (user == null) {
             return CustomResultUtil.info(CustomResultCodeEnum.LOG_IN_FAIL);
         }
+        // 通过登录检查，创建token
         String token = jwtConfig.createToken(user.getId());
         Map<String,Object> map = new HashMap<>(16);
         map.put("user", user);
