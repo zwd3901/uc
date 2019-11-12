@@ -257,7 +257,7 @@ public class SqlUtil {
      * @return
      * @throws Exception
      */
-    public String logicRemoveByPrimaryKey(Object object,String dataStatusFieldName,String dataStatusValue) throws Exception{
+    public String logicRemoveByPrimaryKey(Object object,String dataStatusFieldName,int dataStatusValue) throws Exception{
         TableModel tableModel = parseEntity(object);
         if(tableModel==null){
             throw new RuntimeException("table name is empty");

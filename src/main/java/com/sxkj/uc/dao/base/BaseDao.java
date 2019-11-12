@@ -3,6 +3,7 @@ package com.sxkj.uc.dao.base;
 import com.sxkj.uc.entity.base.BaseEntity;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import com.sxkj.uc.util.UUIDGenerator;
+import com.sxkj.uc.util.code.DataStatusEnum;
 import com.sxkj.uc.util.sql.SqlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
@@ -137,7 +138,7 @@ public class BaseDao<T extends BaseEntity> {
             if (t.getId() == null || "".equals(t.getId())) {
                 throw new RuntimeException("id is empty ");
             }
-            String sql = new SqlUtil().logicRemoveByPrimaryKey(t,"status","0");
+            String sql = new SqlUtil().logicRemoveByPrimaryKey(t,"status", DataStatusEnum.DISABLE.getCode());
             log.info("remove data : {}", sql);
             jdbcTemplate.update(sql);
         } catch (Exception e) {

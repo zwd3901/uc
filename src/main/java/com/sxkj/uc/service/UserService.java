@@ -7,6 +7,7 @@ import com.sxkj.uc.entity.App;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.entity.UserApp;
 import com.sxkj.uc.service.base.BaseService;
+import com.sxkj.uc.service.impl.PermissionCheckInterface;
 import com.sxkj.uc.util.MD5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public class UserService extends BaseService<User> {
+public class UserService extends BaseService<User> implements PermissionCheckInterface {
     @Autowired
     private UserDao userDao;
     @Autowired
@@ -96,5 +97,15 @@ public class UserService extends BaseService<User> {
             }
         }
         return result;
+    }
+
+    /**
+     *
+     * @param permitValue
+     * @return
+     */
+    @Override
+    public boolean hasPermit(String userId,String permitValue) {
+        return false;
     }
 }

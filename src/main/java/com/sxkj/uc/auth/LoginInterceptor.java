@@ -1,16 +1,18 @@
 package com.sxkj.uc.auth;
 
 import com.sxkj.uc.config.JwtParam;
-import com.sxkj.uc.jwt.JwtConfig;
+import com.sxkj.uc.auth.jwt.JwtConfig;
 import com.sxkj.uc.service.UserService;
+import com.sxkj.uc.util.ExceptionHandler;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.function.ServerResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
+import java.io.PrintWriter;
 
 /**
  * @author zwd
@@ -18,9 +20,6 @@ import java.util.Enumeration;
  */
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
-
-    @Autowired
-    private UserService userService;
     @Autowired
     private JwtConfig jwtConfig;
     @Autowired
@@ -36,18 +35,7 @@ public class LoginInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object obj) throws Exception {
-        System.out.println("getContextPath:" + request.getContextPath());
-        System.out.println("getServletPath:" + request.getServletPath());
-        System.out.println("getRequestURI:" + request.getRequestURI());
-        System.out.println("getRequestURL:" + request.getRequestURL());
-        System.out.println("getRealPath:" + request.getSession().getServletContext().getRealPath("image"));
-        /*Enumeration headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
-            String value = request.getHeader(key);
-            System.err.println(key+" :: "+value);
-        }*/
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object obj) {
         // 从header中获取token
         String token = request.getHeader(jwtParam.getHeader());
         if (token == null || "".equals(token)) {
@@ -56,18 +44,39 @@ public class LoginInterceptor implements HandlerInterceptor {
             // todo 还应该对此进行完善
         }
         if (token == null || "".equals(token)) {
-            throw new RuntimeException(jwtParam.getHeader() + "不能为空");
+            try {
+                result(response,jwtParam.getHeader() + "不能为空");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
         }
         Claims claims = jwtConfig.getTokenClaims(token);
         if (claims == null || jwtConfig.isExpired(claims.getExpiration())) {
-            throw new RuntimeException(jwtParam.getHeader() + "失效，请重新登录");
-        } else {
-            System.err.println(jwtConfig.refreshToken(token));
+            try {
+                result(response,jwtParam.getHeader() + "失效，请重新登录");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
         }
-
-        request.setAttribute("id", claims.getSubject());
 
         return true;
 
+    }
+
+    private void result(HttpServletResponse response,String message) throws Exception {
+        //重置response
+        response.reset();
+        //设置编码格式
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
+
+        PrintWriter pw = response.getWriter();
+
+        pw.write(message);
+
+        pw.flush();
+        pw.close();
     }
 }

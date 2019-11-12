@@ -55,6 +55,11 @@ public class UserAppDao extends BaseDao<UserApp> {
         return false;
     }
 
+    /**
+     * 批量删除
+     * @param userApp
+     * @return
+     */
     public boolean batchDelete(UserApp userApp) {
         try {
             String sql = new SqlUtil().delete(userApp);
@@ -67,6 +72,11 @@ public class UserAppDao extends BaseDao<UserApp> {
         return false;
     }
 
+    /**
+     * 根据用户id获取可以访问的app
+     * @param userId
+     * @return
+     */
     public List<Map<String,Object>> findAppByUserId(String userId) {
         String sql = "select a.id,a.name,a.cn_name,a.url from t_app as a,t_user_app as u where a.id=u.app_id and u.user_id=?";
         return jdbcTemplate.queryForList(sql, userId);

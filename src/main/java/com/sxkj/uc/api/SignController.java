@@ -1,19 +1,15 @@
 package com.sxkj.uc.api;
 
-import com.sxkj.uc.aop.Anno;
-import com.sxkj.uc.auth.aop.Permit;
 import com.sxkj.uc.config.JwtParam;
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.jwt.JwtConfig;
+import com.sxkj.uc.auth.jwt.JwtConfig;
 import com.sxkj.uc.service.LoginService;
 import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.CustomResult;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import com.sxkj.uc.util.CustomResultUtil;
-import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;

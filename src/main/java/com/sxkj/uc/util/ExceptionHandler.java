@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author zwd
+ * 异常处理
+ */
 @ControllerAdvice
 @Slf4j
 public class ExceptionHandler {
@@ -17,4 +21,11 @@ public class ExceptionHandler {
         log.error("exception error:{}", e);
         return CustomResultUtil.fail(CustomResultCodeEnum.EXCEPTION.getCode(),e.getCause().toString());
     }
+
+    /*@org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+    @ResponseBody
+    public CustomResult handleException(String e) {
+        log.error("exception error:{}", e);
+        return CustomResultUtil.fail(CustomResultCodeEnum.EXCEPTION.getCode(),e);
+    }*/
 }

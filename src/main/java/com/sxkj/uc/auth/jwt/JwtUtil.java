@@ -1,4 +1,4 @@
-package com.sxkj.uc.auth;
+package com.sxkj.uc.auth.jwt;
 
 import com.sxkj.uc.config.JwtParam;
 import org.springframework.beans.factory.annotation.Autowired;

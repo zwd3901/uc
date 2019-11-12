@@ -1,10 +1,9 @@
 package com.sxkj.uc.auth;
 
-import com.sxkj.uc.auth.aop.Permit;
-import com.sxkj.uc.jwt.JwtConfig;
-import com.sxkj.uc.service.UserAppService;
+import com.sxkj.uc.auth.aop.Permission;
+import com.sxkj.uc.auth.jwt.JwtConfig;
+import com.sxkj.uc.auth.jwt.JwtUtil;
 import com.sxkj.uc.service.UserService;
-import com.sxkj.uc.util.CustomResultUtil;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import io.jsonwebtoken.Claims;
 import javassist.*;
@@ -26,11 +25,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author zwd
+ * 请求权限检查
+ * 在controller的方法上添加Permit注解
  */
 @Aspect
 @Slf4j
@@ -42,38 +42,27 @@ public class AuthorizationAop {
     private JwtUtil requestUtil;
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserAppService userAppService;
 
-    @Pointcut("@annotation(com.sxkj.uc.auth.aop.Permit)")
-    public void permit() {
+    @Pointcut("@annotation(com.sxkj.uc.auth.aop.Permission)")
+    public void permission() {
     }
 
 
-    @Before("permit()")
+    @Before("permission()")
     public void checkPermit(JoinPoint joinPoint){
         String token = requestUtil.getToken();
         System.err.println(token);
         Claims claims = jwtConfig.getTokenClaims(token);
         String userId = claims.getSubject();
-        List<Map<String, Object>> appList = userAppService.findAppByUserId(userId);
-        if (appList == null || appList.isEmpty()) {
-            throw new RuntimeException(CustomResultCodeEnum.NO_PERMIT.getCode());
-        }
 
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
-        Permit permit = method.getAnnotation(Permit.class);
+        Permission permit = method.getAnnotation(Permission.class);
         String value = permit.value();
-        System.err.println(value);
-        boolean pass = false;
-        for(Map<String,Object> map : appList){
-            if (map.get("name") != null&&value.equals(map.get("name").toString())) {
-                pass = true;
-                break;
-            }
-        }
+
+        boolean pass = userService.hasPermit(userId, value);
+
         if (!pass){
             throw new RuntimeException(CustomResultCodeEnum.NO_PERMIT.getCode());
         }
@@ -88,19 +77,6 @@ public class AuthorizationAop {
         String methodName = joinPoint.getSignature().getName();
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
-        try {
-            Method method = methodSignature.getMethod();//clazz.getMethod(methodName);
-            Permit permit = method.getAnnotation(Permit.class);
-            if (permit != null) {
-                String value = permit.value();
-                System.err.println(value);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error(e.getMessage(),e.getCause());
-        }
-
-
     }
 
     private Map<String, Object> getParameters(Class cls, String clazzName, String methodName, Object[] args) throws Exception {

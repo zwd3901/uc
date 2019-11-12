@@ -1,7 +1,7 @@
 package com.sxkj.uc.api;
 
 import com.sxkj.uc.api.base.BaseController;
-import com.sxkj.uc.auth.aop.Permit;
+import com.sxkj.uc.auth.aop.Permission;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.CustomResult;
@@ -9,9 +9,6 @@ import com.sxkj.uc.util.CustomResultUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author zwd
@@ -53,7 +50,7 @@ public class UserController implements BaseController<User> {
      */
     @Override
     @GetMapping("/find")
-    @Permit("Vbeyhgyfk2")
+    @Permission("Vbeyhgyfk")
     public CustomResult find(@RequestBody User user) {
         return CustomResultUtil.success(userService.findByPrimaryKey(user));
     }

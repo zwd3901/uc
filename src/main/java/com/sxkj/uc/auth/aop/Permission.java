@@ -9,13 +9,13 @@ import java.lang.annotation.Target;
 /**
  * @author zwd
  * 权限注解，使用在controller需要添加权限的方法上
+ * TODO 此处只为演示用法
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Permit {
+public @interface Permission {
     /**
-     * 权限名称，这里暂时要求与app的那么对应
-     * TODO 待完善
+     * 权限名称
      * @return
      */
     String value() ;

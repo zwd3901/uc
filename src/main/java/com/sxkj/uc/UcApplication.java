@@ -23,7 +23,7 @@ public class UcApplication  implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration interceptorRegistration = registry.addInterceptor(loginInterceptor());
 
-        interceptorRegistration.addPathPatterns("/**").excludePathPatterns("/","/api/sign/login");
+        interceptorRegistration.addPathPatterns("/**").excludePathPatterns("/","/api/sign/login2");
     }
 
     /**
