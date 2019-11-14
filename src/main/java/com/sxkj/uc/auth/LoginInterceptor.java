@@ -1,14 +1,11 @@
 package com.sxkj.uc.auth;
 
-import com.sxkj.uc.config.JwtParam;
 import com.sxkj.uc.auth.jwt.JwtConfig;
-import com.sxkj.uc.service.UserService;
-import com.sxkj.uc.util.ExceptionHandler;
+import com.sxkj.uc.config.JwtParam;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.function.ServerResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,18 +48,22 @@ public class LoginInterceptor implements HandlerInterceptor {
             }
             return false;
         }
-        Claims claims = jwtConfig.getTokenClaims(token);
-        if (claims == null || jwtConfig.isExpired(claims.getExpiration())) {
-            try {
-                result(response,jwtParam.getHeader() + "失效，请重新登录");
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            Claims claims = jwtConfig.getTokenClaims(token);
+            if (claims == null || jwtConfig.isExpired(claims.getExpiration())) {
+                try {
+                    result(response, jwtParam.getHeader() + "失效，请重新登录");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
 
         return true;
-
     }
 
     private void result(HttpServletResponse response,String message) throws Exception {

@@ -1,5 +1,6 @@
 package com.sxkj.uc.api;
 
+import com.sxkj.uc.auth.jwt.JwtUtil;
 import com.sxkj.uc.config.JwtParam;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.auth.jwt.JwtConfig;
@@ -33,6 +34,9 @@ public class SignController {
 
     @Autowired
     private JwtParam jwtParam;
+    @Autowired
+    private JwtUtil jwtUtil;
+
 
     /**
      * 登录
@@ -64,6 +68,11 @@ public class SignController {
         map.put("user", user);
         map.put(jwtParam.getHeader(), token);
         return CustomResultUtil.success(map);
+    }
+
+    public CustomResult logout() {
+        String token = jwtUtil.getToken();
+
     }
 
 }
