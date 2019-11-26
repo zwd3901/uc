@@ -1,4 +1,4 @@
-package com.sxkj.uc.shiro.conf;
+package com.sxkj.uc.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;

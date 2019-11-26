@@ -33,6 +33,10 @@ public class LoginInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object obj) {
+        System.out.println("getContextPath:" + request.getContextPath());
+        System.out.println("getServletPath:" + request.getServletPath());
+        System.out.println("getRequestURI:" + request.getRequestURI());
+        System.out.println("getRequestURL:" + request.getRequestURL());
         // 从header中获取token
         String token = request.getHeader(jwtParam.getHeader());
         if (token == null || "".equals(token)) {

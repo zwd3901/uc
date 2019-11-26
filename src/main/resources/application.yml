@@ -1,10 +1,9 @@
-server:
-  port: 8050 # 项目请求端口
-  servlet:
-    context-path: /uc # 添加项目名称
+
 spring:
   main:
     allow-bean-definition-overriding: true
+  profiles:
+    active: prod
   datasource:
     druid:
       name: uc

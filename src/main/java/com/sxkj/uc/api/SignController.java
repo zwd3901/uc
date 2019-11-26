@@ -70,9 +70,9 @@ public class SignController {
         return CustomResultUtil.success(map);
     }
 
-    public CustomResult logout() {
+    /*public CustomResult logout() {
         String token = jwtUtil.getToken();
 
-    }
+    }*/
 
 }
