@@ -1,0 +1,47 @@
+server:
+  port: 8060 # 项目请求端口
+  servlet:
+    context-path: /uc # 添加项目名称
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active:
+  datasource:
+    druid:
+      name: uc
+      url: jdbc:mysql://localhost:3386/user_center?useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      filters: stat
+      max-active: 20
+      initial-size: 1
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+
+config:
+  jwt:
+    # 加密秘钥
+    secret: c771348502e241e69b7f66be45a6345a
+    # token有效时长（秒）
+    expire: 3600
+    # header名称
+    header: token
+
+logging:
+  level:
+    com.sxkj.idss.mapper: debug
+    com.sxkj.gaia.mapper: debug
+    org.springframework: error
+    org.apache: error
+    com.alibaba: error
+    springfox: error
