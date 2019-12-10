@@ -1,5 +1,5 @@
 server:
-  port: 8060 # 项目请求端口
+  port: 8050 # 项目请求端口
   servlet:
     context-path: /uc # 添加项目名称
 spring:

@@ -1,17 +1,18 @@
 package com.sxkj.uc.api;
 
-import com.sxkj.uc.auth.jwt.JwtUtil;
 import com.sxkj.uc.config.JwtParam;
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.auth.jwt.JwtConfig;
 import com.sxkj.uc.service.LoginService;
 import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.CustomResult;
-import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import com.sxkj.uc.util.CustomResultUtil;
+import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,13 +30,9 @@ public class SignController {
     private UserService userService;
     @Autowired
     private LoginService loginService;
-    @Autowired
-    private JwtConfig jwtConfig;
 
     @Autowired
     private JwtParam jwtParam;
-    @Autowired
-    private JwtUtil jwtUtil;
 
 
     /**
@@ -62,17 +59,16 @@ public class SignController {
         if (user == null) {
             return CustomResultUtil.info(CustomResultCodeEnum.LOG_IN_FAIL);
         }
-        // 通过登录检查，创建token
-        String token = jwtConfig.createToken(user.getId());
         Map<String,Object> map = new HashMap<>(16);
         map.put("user", user);
-        map.put(jwtParam.getHeader(), token);
         return CustomResultUtil.success(map);
     }
 
-    /*public CustomResult logout() {
-        String token = jwtUtil.getToken();
+    @GetMapping("/logout")
+    public CustomResult logout() {
 
-    }*/
+        return CustomResultUtil.success("ddddddddddddddddd");
+
+    }
 
 }

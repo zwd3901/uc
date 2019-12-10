@@ -49,7 +49,6 @@ public class UserController implements BaseController<User> {
      */
     @Override
     @GetMapping("/find")
-    //@Permission("Vbeyhgyfk")
     public CustomResult find(@RequestBody User user) {
         return CustomResultUtil.success(userService.findByPrimaryKey(user));
     }
