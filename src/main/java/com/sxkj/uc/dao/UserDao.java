@@ -1,12 +1,8 @@
 package com.sxkj.uc.dao;
 
 import com.sxkj.uc.dao.base.BaseDao;
-import com.sxkj.uc.entity.App;
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.entity.UserApp;
-import com.sxkj.uc.util.UUIDGenerator;
 import com.sxkj.uc.util.code.DataStatusEnum;
-import com.sxkj.uc.util.sql.SqlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +20,7 @@ public class UserDao extends BaseDao<User> {
 
     public User findByLonginName(String loginName) {
         User user = new User();
-        user.setLoginName(loginName);
+        user.setUsername(loginName);
         user.setStatus(DataStatusEnum.USABLE.getCode());
         List<Map<String, Object>> list = findList(user);
 

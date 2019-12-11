@@ -1,7 +1,6 @@
 package com.sxkj.uc.util.sql;
 
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.entity.base.BaseEntity;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -456,8 +455,8 @@ public class SqlUtil {
     public static void main(String[] args) throws Exception{
         User user = new User();
         user.setId("1111");
-        user.setLoginPassword("22222");
-        user.setLoginName("3333333");
+        user.setPassword("22222");
+        user.setUsername("3333333");
         user.setRemark("44444444444444444");
 
         String sql = new SqlUtil().insert(user);

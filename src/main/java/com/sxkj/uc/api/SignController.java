@@ -1,17 +1,18 @@
 package com.sxkj.uc.api;
 
-import com.sxkj.uc.config.JwtParam;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.LoginService;
 import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.CustomResult;
 import com.sxkj.uc.util.CustomResultUtil;
+import com.sxkj.uc.util.MyExceptionHandler;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -22,7 +23,6 @@ import java.util.Map;
  * 登录、退出
  */
 @RestController
-@RequestMapping("/api/sign")
 @Slf4j
 public class SignController {
 
@@ -30,9 +30,9 @@ public class SignController {
     private UserService userService;
     @Autowired
     private LoginService loginService;
-
     @Autowired
-    private JwtParam jwtParam;
+    private MyExceptionHandler exceptionHandler;
+
 
 
     /**
@@ -41,7 +41,7 @@ public class SignController {
      * @return
      */
     @GetMapping("/login")
-    public CustomResult login(@RequestBody User user) {
+    public CustomResult login(User user) {
         /**
          * 1、在t_user表中根据登录名查找
          * 2、如果找到相关记录，比较登录密码
@@ -55,20 +55,39 @@ public class SignController {
          * 5.1、 允许访问，跳转
          * 5.2、 禁止访问，返回相应信息
          */
-        user = loginService.signIn(user.getLoginName(), user.getLoginPassword());
+        user = loginService.signIn(user.getUsername(), user.getPassword());
         if (user == null) {
             return CustomResultUtil.info(CustomResultCodeEnum.LOG_IN_FAIL);
         }
-        Map<String,Object> map = new HashMap<>(16);
-        map.put("user", user);
-        return CustomResultUtil.success(map);
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+        try {
+            subject.login(usernamePasswordToken);
+            Map<String, Object> map = new HashMap<>(16);
+            map.put("user", user);
+            return CustomResultUtil.success(map);
+        } catch (Exception e) {
+            return exceptionHandler.handleException(e);
+        }
+
     }
 
     @GetMapping("/logout")
     public CustomResult logout() {
-
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
         return CustomResultUtil.success("ddddddddddddddddd");
 
+    }
+
+    @GetMapping("/index")
+    public CustomResult index(){
+        return CustomResultUtil.success();
+    }
+
+    @GetMapping("/error")
+    public CustomResult error(){
+        return CustomResultUtil.success("error");
     }
 
 }

@@ -6,11 +6,8 @@ import com.sxkj.uc.entity.base.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,10 +20,10 @@ import java.util.List;
 public class User extends BaseEntity {
 
     @Column(name="login_name", unique = true)
-    private String loginName;
+    private String username;
 
     @Column(name="login_password")
-    private String loginPassword;
+    private String password;
 
     @Column(name = "real_name", nullable = false)
     private String realName;

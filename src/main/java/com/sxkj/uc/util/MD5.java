@@ -143,7 +143,7 @@ public class MD5 {
     }
 
     public static void main(String[] args) {
-        String s = "赵";
+        String s = "zheng361";
         String r = encode2hex(s);
 
         log.info(r);

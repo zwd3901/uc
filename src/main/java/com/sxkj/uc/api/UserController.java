@@ -6,6 +6,7 @@ import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.CustomResult;
 import com.sxkj.uc.util.CustomResultUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * 创建、编辑、查找、删除、修改密码
  */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/user")
 @Slf4j
 public class UserController implements BaseController<User> {
     @Autowired
@@ -49,8 +50,29 @@ public class UserController implements BaseController<User> {
      */
     @Override
     @GetMapping("/find")
+    @RequiresPermissions("user:find")
     public CustomResult find(@RequestBody User user) {
-        return CustomResultUtil.success(userService.findByPrimaryKey(user));
+        try {
+            return CustomResultUtil.success(userService.findByPrimaryKey(user));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CustomResultUtil.fail(e.getMessage(),e.getCause().toString());
+        }
+
+
+    }
+
+    @GetMapping("/find2/{id}")
+    @RequiresPermissions("user:find")
+    public CustomResult find2(@PathVariable String id) {
+        try {
+            return CustomResultUtil.success(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return CustomResultUtil.fail(e.getMessage(),e.getCause().toString());
+        }
+
+
     }
 
     /**
@@ -81,5 +103,11 @@ public class UserController implements BaseController<User> {
      */
     public CustomResult editPassword(@RequestBody User user) {
         return CustomResultUtil.success(userService.updatePassword(user));
+    }
+
+    @GetMapping("/find/all")
+    @RequiresPermissions("user:all")
+    public CustomResult findList() {
+        return CustomResultUtil.success(userService.findList(new User()));
     }
 }

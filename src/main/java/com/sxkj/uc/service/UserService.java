@@ -36,7 +36,7 @@ public class UserService extends BaseService<User> implements PermissionCheckInt
      */
     @Override
     public User insert(User user) {
-        user.setLoginPassword(MD5.encode2hex(user.getLoginName()+user.getLoginPassword()));
+        user.setPassword(MD5.encode2hex(user.getUsername()+user.getPassword()));
         try {
             return userDao.insert(user);
         } catch (Exception e) {
@@ -56,8 +56,8 @@ public class UserService extends BaseService<User> implements PermissionCheckInt
         User condition = new User();
         condition.setId(userId);
         User old = userDao.findByPrimaryKey(condition);
-        user.setLoginName(old.getLoginName());
-        user.setLoginPassword(old.getLoginPassword());
+        user.setUsername(old.getUsername());
+        user.setPassword(old.getPassword());
         return userDao.updateByPrimaryKey(user);
     }
 
@@ -71,7 +71,7 @@ public class UserService extends BaseService<User> implements PermissionCheckInt
         User old = new User();
         old.setId(userId);
         old = userDao.findByPrimaryKey(old);
-        old.setLoginPassword(MD5.encode2hex(old.getLoginName()+user.getLoginPassword()));
+        old.setPassword(MD5.encode2hex(old.getUsername()+user.getPassword()));
         return userDao.updateByPrimaryKey(old);
     }
 
@@ -107,5 +107,21 @@ public class UserService extends BaseService<User> implements PermissionCheckInt
     @Override
     public boolean hasPermit(String userId,String permitValue) {
         return false;
+    }
+
+    public String hasPermit(String username){
+        String permit ;
+        switch (username) {
+            case "sun42":
+                permit = "user:all";
+                break;
+            case "zheng36":
+                permit = "user:find";
+                break;
+            default:
+                permit = "";
+                break;
+        }
+        return permit;
     }
 }

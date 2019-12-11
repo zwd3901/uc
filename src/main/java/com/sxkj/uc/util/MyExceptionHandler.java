@@ -3,9 +3,8 @@ package com.sxkj.uc.util;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zwd
@@ -13,12 +12,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 @ControllerAdvice
 @Slf4j
-public class ExceptionHandler {
+public class MyExceptionHandler {
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+    @ExceptionHandler
     @ResponseBody
-    public CustomResult handleException(HttpServletRequest request, Exception e) {
+    public CustomResult handleException(Exception e) {
         log.error("exception error:{}", e);
+        if (e instanceof org.apache.shiro.authz.UnauthorizedException){
+            return CustomResultUtil.fail(CustomResultCodeEnum.NO_PERMIT);
+        }
+
         return CustomResultUtil.fail(CustomResultCodeEnum.EXCEPTION.getCode(),e.getCause().toString());
     }
 

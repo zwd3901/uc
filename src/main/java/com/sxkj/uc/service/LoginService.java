@@ -6,6 +6,7 @@ import com.sxkj.uc.dao.UserDao;
 import com.sxkj.uc.entity.App;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.entity.UserApp;
+import com.sxkj.uc.util.MD5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +27,15 @@ public class LoginService {
 
     /**
      * 用户使用登录名和登录密码登录
+     *
      * @param loginName
      * @param loginPassword
      * @return
      */
-    public User signIn(String loginName,String loginPassword) {
+    public User signIn(String loginName, String loginPassword) {
         // 1、从t_user表根据登录名查找用户
         User user = userDao.findByLonginName(loginName);
-        List<Map<String, Object>> userAppList = new ArrayList<>(16) ;
+        List<Map<String, Object>> userAppList = new ArrayList<>(16);
         List<App> appList = new ArrayList<>(16);
         // 2、如果t_user表中没有，在t_user_app中查找
         if (user == null) {
@@ -47,14 +49,20 @@ public class LoginService {
                 user.setId(userAppList.get(0).get("userId").toString());
                 user = userDao.findByPrimaryKey(user);
             }
-        }else{
-            UserApp userApp = new UserApp();
-            userApp.setUserId(user.getId());
-            userAppList = userAppDao.findList(userApp);
+        } else {
+            String password = MD5.encode2hex(loginName + loginPassword);
+            if (password.equals(user.getPassword())) {
+                UserApp userApp = new UserApp();
+                userApp.setUserId(user.getId());
+                userAppList = userAppDao.findList(userApp);
+            } else {
+                user = null;
+            }
+
         }
         // 4、系统中有关于登录名的记录，查询允许访问的应用并添加到user中
-        if (user != null && userAppList!=null &&!userAppList.isEmpty()) {
-            for(Map<String,Object> map : userAppList){
+        if (user != null && userAppList != null && userAppList.size() > 0) {
+            for (Map<String, Object> map : userAppList) {
                 App app = new App();
                 app.setId(map.get("appId").toString());
                 app = appDao.findByPrimaryKey(app);
@@ -63,6 +71,10 @@ public class LoginService {
             user.setAppList(appList);
         }
         return user;
+    }
+
+    public User findUserByName(String username) {
+        return userDao.findByLonginName(username);
     }
 
 }

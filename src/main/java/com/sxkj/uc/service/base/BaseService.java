@@ -36,7 +36,6 @@ public class BaseService<T extends BaseEntity> {
     @Transactional(rollbackFor = Exception.class)
     public T updateByPrimaryKey(T t){
         T tt = baseDao.updateByPrimaryKey(t);
-        System.err.println(4/0);
         return tt;
     }
 

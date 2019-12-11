@@ -18,7 +18,7 @@ import java.util.Map;
  * 应用管理
  */
 @RestController
-@RequestMapping("/api/app")
+@RequestMapping("/app")
 @Slf4j
 public class AppController implements BaseController<App> {
     @Autowired
