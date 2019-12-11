@@ -42,13 +42,10 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
         shiroFilterFactoryBean.setLoginUrl("/login");
-        shiroFilterFactoryBean.setSuccessUrl("/index");
-        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
 
         Map<String, String> map = new HashMap<>(16);
-        map.put("/uc/logout","logout");
+
         map.put("/login","anon");
-        map.put("/uc/error","anon");
         map.put("/user/**","authc");
         map.put("/index","authc");
         map.put("/**","authc");

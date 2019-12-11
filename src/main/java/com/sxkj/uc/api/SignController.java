@@ -76,7 +76,7 @@ public class SignController {
     public CustomResult logout() {
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
-        return CustomResultUtil.success("ddddddddddddddddd");
+        return CustomResultUtil.success(CustomResultCodeEnum.LOG_OUT_SUCCESS);
 
     }
 
