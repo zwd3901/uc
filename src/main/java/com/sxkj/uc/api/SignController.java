@@ -40,7 +40,7 @@ public class SignController {
     /**
      * 登录
      * @param user
-     * @return
+     * @returnq
      */
     @ApiOperation(value = "登录",notes = "传递用户名和密码")
     @ApiImplicitParam(name = "user",value = "用户对象",required = true,dataType = "json")
