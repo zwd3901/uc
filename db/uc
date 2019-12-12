@@ -1,0 +1,188 @@
+-- MySQL dump 10.13  Distrib 8.0.16, for Win64 (x86_64)
+--
+-- Host: localhost    Database: user_center
+-- ------------------------------------------------------
+-- Server version	8.0.16
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+ SET NAMES utf8mb4 ;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `sys_token`
+--
+
+DROP TABLE IF EXISTS `sys_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `sys_token` (
+  `id` varchar(50) NOT NULL COMMENT '编号',
+  `user_id` varchar(50) DEFAULT NULL COMMENT '用户id',
+  `token` varchar(200) DEFAULT NULL COMMENT 'token',
+  `expire_time` bigint(20) DEFAULT NULL COMMENT '过期时间',
+  `create_id` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_id` varchar(50) DEFAULT NULL COMMENT '修改人',
+  `last_update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` tinyint(4) DEFAULT NULL COMMENT '数据状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统token';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sys_token`
+--
+
+LOCK TABLES `sys_token` WRITE;
+/*!40000 ALTER TABLE `sys_token` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sys_token` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_app`
+--
+
+DROP TABLE IF EXISTS `t_app`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `t_app` (
+  `id` varchar(50) NOT NULL COMMENT '编号',
+  `name` varchar(100) DEFAULT NULL COMMENT '名称',
+  `url` varchar(200) DEFAULT NULL COMMENT '应用地址',
+  `cn_name` varchar(200) DEFAULT NULL COMMENT '应用中文名称',
+  `create_id` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_id` varchar(50) DEFAULT NULL COMMENT '修改人',
+  `last_update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` tinyint(4) DEFAULT NULL COMMENT '数据状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='应用表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_app`
+--
+
+LOCK TABLES `t_app` WRITE;
+/*!40000 ALTER TABLE `t_app` DISABLE KEYS */;
+INSERT INTO `t_app` VALUES ('123','Vbeyhgyfk','Undykbkrbihfwkir','黄慧','','2019-10-21 05:22:57','','2019-10-23 06:03:56','',1),('17529ae19fbf4d7ab4f67813e13412ec','Baahf','http://localhost/uc','改和里指己总','','2019-10-23 05:53:53','','2019-10-23 05:53:53','',1),('d9f35b9c9acd49968ced74051c7641f7','Ceyyabs','http://localhost/uc','西例分领器口','','2019-10-21 06:33:03','','2019-10-21 06:45:09','',0);
+/*!40000 ALTER TABLE `t_app` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_on_line`
+--
+
+DROP TABLE IF EXISTS `t_on_line`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `t_on_line` (
+  `id` varchar(50) NOT NULL COMMENT '编号',
+  `user_id` varchar(50) DEFAULT NULL COMMENT '用户id',
+  `user_real_name` varchar(50) DEFAULT NULL COMMENT '用户真名',
+  `token` varchar(500) DEFAULT NULL,
+  `create_id` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_id` varchar(50) DEFAULT NULL COMMENT '修改人',
+  `last_update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` tinyint(4) DEFAULT NULL COMMENT '数据状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='在线用户';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_on_line`
+--
+
+LOCK TABLES `t_on_line` WRITE;
+/*!40000 ALTER TABLE `t_on_line` DISABLE KEYS */;
+/*!40000 ALTER TABLE `t_on_line` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_user`
+--
+
+DROP TABLE IF EXISTS `t_user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `t_user` (
+  `id` varchar(50) NOT NULL COMMENT '编号',
+  `login_name` varchar(50) DEFAULT NULL COMMENT '登录名称',
+  `login_password` varchar(100) DEFAULT NULL COMMENT '密码',
+  `real_name` varchar(50) DEFAULT NULL COMMENT '真名称',
+  `telephone` varchar(50) DEFAULT NULL COMMENT '联系电话',
+  `work_place` varchar(200) DEFAULT NULL COMMENT '工作单位',
+  `create_id` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_id` varchar(50) DEFAULT NULL COMMENT '修改人',
+  `last_update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` tinyint(4) DEFAULT NULL COMMENT '数据状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_user`
+--
+
+LOCK TABLES `t_user` WRITE;
+/*!40000 ALTER TABLE `t_user` DISABLE KEYS */;
+INSERT INTO `t_user` VALUES ('053d983aa31f47fe9746f5a194e1bb8f','sun42','166a9881bbdffd656e1c71977bd5f150','孙42','','','','2019-10-28 02:42:59','','2019-12-10 05:23:00','',1),('40d250efe11845dca1b2a6f95d85f4ca','qian71','j8a0s00ax80n2sg88jgwaasnj82fiksa','钱71','','','','2019-10-28 02:43:43','','2019-10-28 02:43:43','',1),('a652b6f5ba3c45038b6595356c724e06','zhao0','fknsn20k028k0snkj2agffaxijas80jj','赵0','','','','2019-10-31 09:04:08','','2019-10-31 09:04:08','',1),('e78646f9ab544d018ef3ea5dc7b71f18','zheng36','bdb3f794b13a4d61f930af8ef16133f5','郑36','','','','2019-10-31 09:03:08','','2019-12-10 07:03:20','',1);
+/*!40000 ALTER TABLE `t_user` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `t_user_app`
+--
+
+DROP TABLE IF EXISTS `t_user_app`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `t_user_app` (
+  `id` varchar(50) NOT NULL COMMENT '编号',
+  `user_id` varchar(50) DEFAULT NULL COMMENT '用户id',
+  `app_id` varchar(50) DEFAULT NULL COMMENT '应用id',
+  `login_name` varchar(50) DEFAULT NULL COMMENT '关联应用的登录名',
+  `login_password` varchar(100) DEFAULT NULL COMMENT '关联应用的登录密码',
+  `create_id` varchar(50) DEFAULT NULL COMMENT '创建人',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `last_update_id` varchar(50) DEFAULT NULL COMMENT '修改人',
+  `last_update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '最后修改时间',
+  `remark` varchar(200) DEFAULT NULL COMMENT '备注',
+  `status` tinyint(4) DEFAULT NULL COMMENT '数据状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户-应用关联表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `t_user_app`
+--
+
+LOCK TABLES `t_user_app` WRITE;
+/*!40000 ALTER TABLE `t_user_app` DISABLE KEYS */;
+INSERT INTO `t_user_app` VALUES ('1b4688a495534b9a9003e5164a8d3a60','053d983aa31f47fe9746f5a194e1bb8f','123','sun42s','1','','2019-10-28 02:50:45','','2019-10-28 02:50:45','',1),('9562ce604fc04e39bf138c3fc709d1f2','053d983aa31f47fe9746f5a194e1bb8f','17529ae19fbf4d7ab4f67813e13412ec','sun42s','1','','2019-10-28 02:50:45','','2019-10-28 02:50:45','',1);
+/*!40000 ALTER TABLE `t_user_app` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-12-12 17:26:01
