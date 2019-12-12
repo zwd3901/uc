@@ -46,15 +46,11 @@ public class ShiroConfig {
         filters.put("auth", new AuthFilter());
         shiroFilterFactoryBean.setFilters(filters);
 
-//        shiroFilterFactoryBean.setLoginUrl("/login");
-
         Map<String, String> map = new HashMap<>(16);
 
+        map.put("/logout","anon");
         map.put("/login","anon");
-        map.put("/user/**","auth");
-        map.put("/index","auth");
         map.put("/**","auth");
-
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;

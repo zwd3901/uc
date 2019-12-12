@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * 创建、编辑、查找、删除、修改密码
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @Slf4j
 public class UserController implements BaseController<User> {
     @Autowired

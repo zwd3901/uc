@@ -23,4 +23,21 @@ public class AppContext {
     public static HttpServletResponse getResponse(){
         return getRequestAttributes().getResponse();
     }
+
+    /**
+     * 获取请求的token
+     * @param request
+     * @return
+     */
+    public static String getToken(HttpServletRequest request){
+        String token = request.getHeader("token");
+        if (token == null || "".equals(token)) {
+            token = request.getParameter("token");
+        }
+        return token==null?"":token;
+    }
+
+    public static String getToken(){
+        return getToken(getRequestAttributes().getRequest());
+    }
 }

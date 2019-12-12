@@ -2,10 +2,10 @@ package com.sxkj.uc.util.code;
 
 public enum CustomResultCodeEnum {
     SUCCESS("0000","操作成功"),FAIL("0001","操作失败"),
-    SIGN_UP_SUCCESS("0001","注册成功"),SIGN_UP_FAIL("0011","注册失败"),
-    LOG_IN_SUCCESS("0001","登录成功"),LOG_IN_FAIL("0021","登录失败"),
-    LOG_OUT_SUCCESS("0003","退出成功"),LOG_OUT_FAIL("0031","退出失败"),
-    NO_PERMIT("0004","缺少权限"),
+    SIGN_UP_SUCCESS("0010","注册成功"),SIGN_UP_FAIL("0011","注册失败"),
+    LOG_IN_SUCCESS("0020","登录成功"),LOG_IN_FAIL("0021","登录失败"),
+    LOG_OUT_SUCCESS("0030","退出成功"),LOG_OUT_FAIL("0031","退出失败"),
+    NO_PERMIT("0004","缺少权限"),TOKEN_EXPIRE("0005","token过期"),
     EXCEPTION("9999","运行异常");
 
     private String code;

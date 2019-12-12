@@ -1,8 +1,8 @@
 package com.sxkj.uc.service;
 
-import com.sxkj.uc.dao.SysTokenDao;
+import com.sxkj.uc.dao.TokenDao;
 import com.sxkj.uc.dao.UserDao;
-import com.sxkj.uc.entity.SysToken;
+import com.sxkj.uc.entity.Token;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.base.BaseService;
 import com.sxkj.uc.util.UUIDGenerator;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -24,12 +25,12 @@ import java.util.Random;
 @Transactional(readOnly = true,rollbackFor = Exception.class)
 @Service
 @Slf4j
-public class SysTokenService extends BaseService<SysToken> {
+public class TokenService extends BaseService<Token> {
     /** 过期时长：12小时 */
-    private final static int EXPIRE = 12;
+    private final static long EXPIRE = 43200000;
 
     @Autowired
-    private SysTokenDao sysTokenDao;
+    private TokenDao tokenDao;
     @Autowired
     private UserDao userDao;
 
@@ -39,14 +40,14 @@ public class SysTokenService extends BaseService<SysToken> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteByUserId(String userId) {
-        SysToken sysToken = new SysToken();
+        Token sysToken = new Token();
         sysToken.setUserId(userId);
-        List<Map<String, Object>> list = sysTokenDao.findList(sysToken);
+        List<Map<String, Object>> list = tokenDao.findList(sysToken);
         if(list!=null&&list.size()>0){
             for (Map<String, Object> map : list) {
-                SysToken tmp = new SysToken();
+                Token tmp = new Token();
                 tmp.setId(map.get("id").toString());
-                sysTokenDao.deleteByPrimaryKey(tmp);
+                tokenDao.deleteByPrimaryKey(tmp);
             }
         }
 
@@ -58,20 +59,20 @@ public class SysTokenService extends BaseService<SysToken> {
      * @param userId
      * @return
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(readOnly = false,rollbackFor = Exception.class)
     public String createToken(String userId) {
         // 2、删除token
         deleteByUserId(userId);
         // 3、生成新的token
         String token = getRandomString() + UUIDGenerator.generator() + System.nanoTime();
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expireTime = now.plusHours(EXPIRE);
-        SysToken sysToken =  new SysToken();
+        long now = System.currentTimeMillis();
+
+        Token sysToken =  new Token();
         sysToken.setUserId(userId);
         sysToken.setToken(token);
-        sysToken.setExpireTime(expireTime);
+        sysToken.setExpireTime(now + EXPIRE);
         // 3、保存token
-        sysToken = sysTokenDao.insert(sysToken);
+        sysToken = tokenDao.insert(sysToken);
         // 4、返回字符串
         return token;
     }
@@ -82,7 +83,7 @@ public class SysTokenService extends BaseService<SysToken> {
      * @return  true：过期，false：未过期
      */
     public boolean isExpire(String token) {
-        SysToken sysToken = findByToken(token);
+        Token sysToken = findByToken(token);
         int duration = expireDuration(sysToken);
 
         return duration<=0?true:false;
@@ -93,10 +94,10 @@ public class SysTokenService extends BaseService<SysToken> {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public String updateToken(SysToken sysToken) {
+    public String updateToken(Token sysToken) {
         LocalDateTime now = LocalDateTime.now();
-        sysToken.setExpireTime(now.plusHours(EXPIRE));
-        sysToken = sysTokenDao.updateByPrimaryKey(sysToken);
+        sysToken.setExpireTime(System.currentTimeMillis()+EXPIRE);
+        sysToken = tokenDao.updateByPrimaryKey(sysToken);
         return sysToken.getToken();
     }
 
@@ -105,9 +106,8 @@ public class SysTokenService extends BaseService<SysToken> {
      * @param sysToken
      * @return  当前时间与过期时间的时间差（秒）,大于0：token未过期，小等于0：token已过期
      */
-    public int expireDuration(SysToken sysToken){
-        Duration duration = Duration.between(LocalDateTime.now(),sysToken.getExpireTime());
-        return (int) (duration.toMillis()/1000);
+    public int expireDuration(Token sysToken){
+        return (int) ((sysToken.getExpireTime()-System.currentTimeMillis())/1000);
     }
 
     /**
@@ -116,10 +116,10 @@ public class SysTokenService extends BaseService<SysToken> {
      * @return
      */
     public User findUserByToken(String token) {
-        SysToken sysToken = new SysToken();
+        Token sysToken = new Token();
         sysToken.setToken(token);
         sysToken.setStatus(DataStatusEnum.USABLE.getCode());
-        List<Map<String, Object>> list = sysTokenDao.findList(sysToken);
+        List<Map<String, Object>> list = tokenDao.findList(sysToken);
         if (list != null && list.size() > 0) {
             User user = new User();
             user.setId(list.get(0).get("userId").toString());
@@ -145,22 +145,25 @@ public class SysTokenService extends BaseService<SysToken> {
         return sb.toString();
     }
 
+
+
     /**
      * 根据userId获取sysToken
      * @param userId
      * @return
      */
-    public SysToken findByUserId(String userId) {
-        SysToken sysToken = new SysToken();
+    public Token findByUserId(String userId) {
+        Token sysToken = new Token();
         sysToken.setUserId(userId);
         sysToken.setStatus(DataStatusEnum.USABLE.getCode());
-        List<Map<String, Object>> list = sysTokenDao.findList(sysToken);
+        List<Map<String, Object>> list = tokenDao.findList(sysToken);
         if (list == null || list.size() == 0) {
             return null;
         }
-        sysToken = new SysToken();
+        sysToken = new Token();
         sysToken.setId(list.get(0).get("id").toString());
-        return sysTokenDao.findByPrimaryKey(sysToken);
+
+        return tokenDao.findByPrimaryKey(sysToken);
     }
 
     /**
@@ -168,19 +171,19 @@ public class SysTokenService extends BaseService<SysToken> {
      * @param token
      * @return
      */
-    public SysToken findByToken(String token) {
-        SysToken sysToken = new SysToken();
+    public Token findByToken(String token) {
+        Token sysToken = new Token();
         sysToken.setToken(token);
-        List<Map<String, Object>> list = sysTokenDao.findList(sysToken);
+        List<Map<String, Object>> list = tokenDao.findList(sysToken);
         if (list == null || list.size() == 0) {
             return null;
         }
-        sysToken = new SysToken();
+        sysToken = new Token();
         sysToken.setId(list.get(0).get("id").toString());
-        return sysTokenDao.findByPrimaryKey(sysToken);
+        return tokenDao.findByPrimaryKey(sysToken);
     }
     public static void main(String[] args) {
-        SysTokenService service = new SysTokenService();
+        TokenService service = new TokenService();
 //        for (int i = 0; i < 10; i++) {
 //            String r = service.getRandomString();
 //            System.err.println(r);
@@ -192,6 +195,8 @@ public class SysTokenService extends BaseService<SysToken> {
         System.err.println(duration.toMillis());
         duration = Duration.between(expireTime,now);
         System.err.println(duration.toMillis());
+        Date date = new Date();
+        System.err.println(date);
     }
 
 

@@ -2,17 +2,15 @@ package com.sxkj.uc.api;
 
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.LoginService;
-import com.sxkj.uc.service.SysTokenService;
-import com.sxkj.uc.service.UserService;
+import com.sxkj.uc.service.TokenService;
 import com.sxkj.uc.util.CustomResult;
 import com.sxkj.uc.util.CustomResultUtil;
 import com.sxkj.uc.util.MyExceptionHandler;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
@@ -27,13 +25,11 @@ import java.util.Map;
 public class SignController {
 
     @Autowired
-    private UserService userService;
-    @Autowired
     private LoginService loginService;
     @Autowired
     private MyExceptionHandler exceptionHandler;
     @Autowired
-    private SysTokenService sysTokenService;
+    private TokenService tokenService;
 
 
 
@@ -49,7 +45,7 @@ public class SignController {
             if (user == null) {
                 return CustomResultUtil.info(CustomResultCodeEnum.LOG_IN_FAIL);
             }else {
-                String token = sysTokenService.createToken(user.getId());
+                String token = tokenService.createToken(user.getId());
                 Map<String, Object> map = new HashMap<>(16);
                 map.put("user", user);
                 map.put("token",token);
@@ -60,12 +56,16 @@ public class SignController {
         }
     }
 
-    @GetMapping("/logout")
-    public CustomResult logout() {
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();
-        return CustomResultUtil.success(CustomResultCodeEnum.LOG_OUT_SUCCESS);
+    /**
+     * 退出系统，清理token
+     * @param userId
+     * @return
+     */
+    @GetMapping("/logout/{userId}")
+    public CustomResult logout(@PathVariable String userId) {
+        tokenService.deleteByUserId(userId);
 
+        return CustomResultUtil.success(CustomResultCodeEnum.LOG_OUT_SUCCESS);
     }
 
     @GetMapping("/index")

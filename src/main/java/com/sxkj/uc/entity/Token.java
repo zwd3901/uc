@@ -5,9 +5,6 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  * @author zwd
@@ -19,7 +16,7 @@ import java.time.ZoneId;
  */
 @Data
 @Table(name = "sys_token")
-public class SysToken extends BaseEntity {
+public class Token extends BaseEntity {
     /**
      * 用户id
      */
@@ -34,12 +31,6 @@ public class SysToken extends BaseEntity {
      * 过期时间
      */
     @Column(name = "expire_time", nullable = false)
-    private LocalDateTime expireTime;
+    private Long expireTime;
 
-    @Override
-    public String toString(){
-        ZoneId zoneId = ZoneId.systemDefault();
-        Instant instant = getExpireTime().atZone(zoneId).toInstant();
-        return getUserId()+":"+getToken()+":"+ instant.toEpochMilli();
-    }
 }

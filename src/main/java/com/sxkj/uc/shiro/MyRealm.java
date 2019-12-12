@@ -1,8 +1,7 @@
 package com.sxkj.uc.shiro;
 
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.service.LoginService;
-import com.sxkj.uc.service.SysTokenService;
+import com.sxkj.uc.service.TokenService;
 import com.sxkj.uc.service.UserService;
 import com.sxkj.uc.util.AppContext;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 @Slf4j
 public class MyRealm extends AuthorizingRealm {
-    @Autowired
-    private LoginService loginService;
+
     @Autowired
     private UserService userService;
     @Autowired
-    private SysTokenService sysTokenService;
+    private TokenService tokenService;
     /**
      * 授权，验证用户权限或者角色时调用
      * @param principalCollection
@@ -69,7 +67,7 @@ public class MyRealm extends AuthorizingRealm {
         }
         String token = (String) authenticationToken.getPrincipal();
         // 2. 获取登录用户信息
-        User user = sysTokenService.findUserByToken(token);
+        User user = tokenService.findUserByToken(token);
         if (user == null) {
             throw new IncorrectCredentialsException("用户不存在");
         }

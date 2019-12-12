@@ -16,7 +16,7 @@ import java.util.List;
  * 用户、应用关联关系表
  */
 @RestController
-@RequestMapping("/user/app")
+@RequestMapping("/api/user/app")
 @Slf4j
 public class UserAppController implements BaseController<UserApp> {
     @Autowired
