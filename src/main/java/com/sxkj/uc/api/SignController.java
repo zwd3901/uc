@@ -7,6 +7,9 @@ import com.sxkj.uc.util.CustomResult;
 import com.sxkj.uc.util.CustomResultUtil;
 import com.sxkj.uc.util.MyExceptionHandler;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import java.util.Map;
  * @author zwd
  * 登录、退出
  */
+@Api(description = "登录、退出管理",tags = "sign")
 @RestController
 @Slf4j
 public class SignController {
@@ -38,6 +42,8 @@ public class SignController {
      * @param user
      * @return
      */
+    @ApiOperation(value = "登录",notes = "传递用户名和密码")
+    @ApiImplicitParam(name = "user",value = "用户对象",required = true,dataType = "json")
     @GetMapping("/login")
     public CustomResult login(User user) {
         try {

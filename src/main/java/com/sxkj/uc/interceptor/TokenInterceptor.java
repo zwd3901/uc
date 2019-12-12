@@ -24,6 +24,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.err.println(request.getRequestURI()+"=====================================");
         // 获取token
         String token = AppContext.getToken(request);
         // 获取token对象

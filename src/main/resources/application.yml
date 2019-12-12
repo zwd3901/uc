@@ -1,4 +1,15 @@
 spring:
   profiles:
     active: dev
+swagger:
+  title: 用户中心
+  description: user center,hahahah
+  version: 1.1
+  license: Apache License, Version 2.0
+  license-url: https://www.apache.org/licenses/LICENSE-2.0.html
+  contact:
+    name: zwd
+  base-package: com.sxkj.uc.api
+  base-path: /**
+
 
