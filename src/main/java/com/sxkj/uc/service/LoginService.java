@@ -76,5 +76,4 @@ public class LoginService {
     public User findUserByName(String username) {
         return userDao.findByLonginName(username);
     }
-
 }

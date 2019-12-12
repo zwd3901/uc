@@ -1,5 +1,6 @@
 package com.sxkj.uc.entity.base;
 
+import com.google.gson.annotations.Expose;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -22,9 +23,11 @@ public class BaseEntity implements Serializable {
     @Column(name = "status")
     private int status = 1;
     /** 数据创建人 */
-    @Column(name="create_id", updatable = false)
+    @Expose(serialize = false,deserialize = false)
+    @Column(name="create_id")
     private String createId = "";
     /** 数据最后修改人 */
+    @Expose(serialize = false,deserialize = false)
     @Column(name = "last_update_id")
     private String updateId = "";
 

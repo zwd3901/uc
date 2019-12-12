@@ -6,18 +6,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class UcContext {
+/**
+ * @author zwd
+ */
+public class AppContext {
 
-    private ServletRequestAttributes getRequestAttributes(){
+    private static ServletRequestAttributes getRequestAttributes(){
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         return attributes;
     }
 
-    public HttpServletRequest getRequest(){
+    public static HttpServletRequest getRequest(){
         return getRequestAttributes().getRequest();
     }
 
-    public HttpServletResponse getResponse(){
+    public static HttpServletResponse getResponse(){
         return getRequestAttributes().getResponse();
     }
 }
