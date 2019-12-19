@@ -5,6 +5,7 @@ import com.sxkj.uc.service.TokenService;
 import com.sxkj.uc.util.AppContext;
 import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -22,43 +23,33 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     private TokenService tokenService;
 
+    /**
+     * 获取token，并验证token是否存在，是否超时，同时对合法的token进行更新
+     *
+     * @param request
+     * @param response
+     * @param handler
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.err.println(request.getRequestURI()+"=====================================");
         // 获取token
         String token = AppContext.getToken(request);
         // 获取token对象
         Token sysToken = null;
-
+        System.err.println("request token : " + token);
         if (token != null && !"".equals(token)) {
             sysToken = tokenService.findByToken(token);
         }
-        boolean flag = tokenCheck(sysToken,token);
-        if (flag) {
+        if (tokenService.tokenCheck(sysToken, token)) {
             // 更新token
             tokenService.updateToken(sysToken);
             return true;
-        }else {
-            throw new RuntimeException(CustomResultCodeEnum.TOKEN_EXPIRE.getCode());
+        } else {
+            throw new ExpiredCredentialsException(CustomResultCodeEnum.TOKEN_EXPIRE.getCode());
         }
     }
 
-    private boolean tokenCheck(Token sysToken, String token){
-        if (token == null || "".equals(token)) {
-            log.info("token检查，没有token");
-            return false;
-        }
-        if (sysToken == null) {
-            log.info("token检查，没有找到Token对象");
-            return false;
-        }
-        // 判断token是否过期
-        long now = System.currentTimeMillis();
-        long expireTime = sysToken.getExpireTime();
-        if(expireTime-now<=0){
-            log.info("token检查，已过期");
-            return false;
-        }
-        return true;
-    }
+
 }

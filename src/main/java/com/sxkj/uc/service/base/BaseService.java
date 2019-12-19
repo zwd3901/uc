@@ -10,65 +10,72 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author zwd
  * @param <T>
+ * @author zwd
  */
 @Service
-@Transactional(readOnly = true, rollbackFor = Exception.class)
 public class BaseService<T extends BaseEntity> {
     @Autowired
     private BaseDao<T> baseDao;
+
     /**
      * insert data
+     *
      * @param t
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public T insert(T t){
+    public T insert(T t) {
         return baseDao.insert(t);
-    };
+    }
+
+    ;
 
     /**
      * update data by primary key
+     *
      * @param t
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public T updateByPrimaryKey(T t){
+    public T updateByPrimaryKey(T t) {
         T tt = baseDao.updateByPrimaryKey(t);
         return tt;
     }
 
     /**
      * select data by primary key
+     *
      * @param t
      * @return
      */
-    public Map<String, Object> findMapByPrimaryKey(T t){
+    public Map<String, Object> findMapByPrimaryKey(T t) {
         return baseDao.findMapByPrimaryKey(t);
     }
 
-    public T findByPrimaryKey(T t){
+    public T findByPrimaryKey(T t) {
         return baseDao.findByPrimaryKey(t);
     }
 
-    public List<Map<String, Object>> findList(T t){
+    public List<Map<String, Object>> findList(T t) {
         return baseDao.findList(t);
     }
 
     /**
      * 物理删除
      * // todo login remove
+     *
      * @param t
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public void deleteByPrimaryKey(T t){
+    public void deleteByPrimaryKey(T t) {
         baseDao.deleteByPrimaryKey(t);
     }
 
     /**
      * 逻辑删除
+     *
      * @param t
      */
     @Transactional(rollbackFor = Exception.class)

@@ -1,4 +1,4 @@
-package com.sxkj.uc.service.impl;
+package com.sxkj.uc.service;
 
 /**
  * @author zwd

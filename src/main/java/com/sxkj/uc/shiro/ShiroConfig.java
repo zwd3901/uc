@@ -25,13 +25,13 @@ public class ShiroConfig {
     }
 
     @Bean
-    public MyRealm myRealm(){
+    public MyRealm myRealm() {
         MyRealm myRealm = new MyRealm();
         return myRealm;
     }
 
     @Bean
-    public DefaultWebSecurityManager securityManager(){
+    public DefaultWebSecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealm(myRealm());
         return securityManager;
@@ -48,15 +48,16 @@ public class ShiroConfig {
 
         Map<String, String> map = new HashMap<>(16);
 
-        map.put("/logout","anon");
-        map.put("/login","anon");
+        map.put("/logout", "anon");
+        map.put("/login", "anon");
         map.put("/swagger-ui.html", "anon");
         map.put("/swagger-resources", "anon");
         map.put("/swagger-resources/configuration/security", "anon");
         map.put("/swagger-resources/configuration/ui", "anon");
         map.put("/v2/api-docs", "anon");
         map.put("/webjars/springfox-swagger-ui/**", "anon");
-        map.put("/**","auth");
+        map.put("/api/token/**", "anon");
+        map.put("/**", "auth");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(map);
         return shiroFilterFactoryBean;

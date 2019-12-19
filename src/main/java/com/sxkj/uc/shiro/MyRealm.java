@@ -3,7 +3,6 @@ package com.sxkj.uc.shiro;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.TokenService;
 import com.sxkj.uc.service.UserService;
-import com.sxkj.uc.util.AppContext;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -22,20 +21,22 @@ public class MyRealm extends AuthorizingRealm {
     private UserService userService;
     @Autowired
     private TokenService tokenService;
+
     /**
      * 授权，验证用户权限或者角色时调用
+     *
      * @param principalCollection
      * @return
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        log.error("doGetAuthorizationInfo 鉴权 。。。。。。。。。。。"+ AppContext.getRequest().getRequestURI());
+        log.error("doGetAuthorizationInfo 鉴权 。。。。。。。。。。。");
         if (principalCollection.getPrimaryPrincipal() == null) {
             return null;
         }
         // 获取登录用户信息
         User user = (User) principalCollection.getPrimaryPrincipal();
-        if(user == null ){
+        if (user == null) {
             return null;
         }
         // 添加权限(角色)
@@ -51,13 +52,14 @@ public class MyRealm extends AuthorizingRealm {
 
     /**
      * 认证 登录时调用
+     *
      * @param authenticationToken
      * @return
      * @throws AuthenticationException
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        log.error("doGetAuthenticationInfo 认证 。。。。。。。。。。。"+ AppContext.getRequest().getRequestURI());
+        log.error("doGetAuthenticationInfo 认证 。。。。。。。。。。。");
         if (authenticationToken.getPrincipal() == null) {
             return null;
         }
@@ -71,7 +73,7 @@ public class MyRealm extends AuthorizingRealm {
         if (user == null) {
             throw new IncorrectCredentialsException("用户不存在");
         }
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user,token,getName());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, token, getName());
         return info;
     }
 }

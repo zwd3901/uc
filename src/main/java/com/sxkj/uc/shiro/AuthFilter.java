@@ -1,6 +1,7 @@
 package com.sxkj.uc.shiro;
 
 import com.google.gson.Gson;
+import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
@@ -10,7 +11,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +21,7 @@ import java.util.Map;
 public class AuthFilter extends AuthenticatingFilter {
     /**
      * 生成自定义token
+     *
      * @param servletRequest
      * @param servletResponse
      * @return
@@ -38,6 +39,7 @@ public class AuthFilter extends AuthenticatingFilter {
 
     /**
      * 步骤1.所有请求全部拒绝访问
+     *
      * @param request
      * @param response
      * @param mappedValue
@@ -53,6 +55,7 @@ public class AuthFilter extends AuthenticatingFilter {
 
     /**
      * 步骤2，拒绝访问的请求，会调用onAccessDenied方法，onAccessDenied方法先获取 token，再调用executeLogin方法
+     *
      * @param request
      * @param response
      * @return
@@ -65,17 +68,17 @@ public class AuthFilter extends AuthenticatingFilter {
         if ("".equals(token)) {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
-//            httpResponse.setHeader("Access-Control-Allow-Origin", HttpContextUtils.getOrigin());
             httpResponse.setCharacterEncoding("UTF-8");
-            Map<String, Object> result = new HashMap<>();
-            result.put("status", "400");
-            result.put("msg", "未登录--onAccessDenied");
+            Map<String, String> result = new HashMap<>(2);
+            result.put("code", CustomResultCodeEnum.NO_TOKEN.getCode());
+            result.put("msg", CustomResultCodeEnum.NO_TOKEN.getMsg());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
             return false;
         }
         return executeLogin(request, response);
     }
+
     /**
      * 登陆失败时候调用
      */
@@ -84,31 +87,31 @@ public class AuthFilter extends AuthenticatingFilter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setContentType("application/json;charset=utf-8");
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
-//        httpResponse.setHeader("Access-Control-Allow-Origin", HttpContextUtils.getOrigin());
         httpResponse.setCharacterEncoding("UTF-8");
         try {
-            //处理登录失败的异常
-            Throwable throwable = e.getCause() == null ? e : e.getCause();
-            Map<String, Object> result = new HashMap<>();
-            result.put("status", "400");
-            result.put("msg", "登陆失败--onLoginFailure");
+            Map<String, String> result = new HashMap<>(2);
+            result.put("code", CustomResultCodeEnum.LOG_IN_FAIL.getCode());
+            result.put("msg", CustomResultCodeEnum.LOG_IN_FAIL.getMsg());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
-        } catch (IOException e1) {
+        } catch (Exception e1) {
+            throw new AuthenticationException();
         }
         return false;
     }
 
     /**
      * 获取请求的token
+     *
      * @param request
      * @return
      */
     private String getRequestToken(HttpServletRequest request) {
+        System.err.println(request.getRequestURI());
         String token = request.getHeader("token");
         if (token == null || "".equals(token)) {
             token = request.getParameter("token");
         }
-        return token==null?"":token;
+        return token == null ? "" : token;
     }
 }
