@@ -4,7 +4,6 @@ import com.sxkj.uc.entity.base.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -16,9 +15,9 @@ import javax.persistence.Table;
 @Data
 public class App extends BaseEntity {
 
-    @Column(name = "name",unique = true)
+    @Column(name = "name", unique = true)
     private String name;
-    @Column(name = "url",unique = true)
+    @Column(name = "url", unique = true)
     private String url;
     @Column(name = "cn_name")
     private String cnName;

@@ -7,6 +7,7 @@ import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
  **/
 @Slf4j
 public class TokenInterceptor extends HandlerInterceptorAdapter {
+    @Value("${server.servlet.context-path}")
+    private String contextPath;
     @Autowired
     private TokenService tokenService;
 
@@ -34,6 +37,7 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        System.err.println(request.getContextPath() + ".................................");
         // 获取token
         String token = AppContext.getToken(request);
         // 获取token对象
@@ -43,6 +47,8 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             sysToken = tokenService.findByToken(token);
         }
         if (tokenService.tokenCheck(sysToken, token)) {
+            String secret = AppContext.getSecretKey(request);
+
             // 更新token
             tokenService.updateToken(sysToken);
             return true;

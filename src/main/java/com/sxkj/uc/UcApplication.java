@@ -23,7 +23,9 @@ public class UcApplication implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor()).addPathPatterns("/api/**");
+        registry.addInterceptor(tokenInterceptor())
+                .addPathPatterns("/api/**")
+                .addPathPatterns("/verify");
     }
 
     @Bean
