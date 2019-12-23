@@ -1,6 +1,8 @@
 package com.sxkj.uc.util;
 
-import com.sxkj.uc.util.code.CustomResultCodeEnum;
+import com.sxkj.common.util.MyResponse;
+import com.sxkj.common.util.MyResponseUtil;
+import com.sxkj.common.util.code.MyResponseStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.ExpiredCredentialsException;
@@ -20,20 +22,20 @@ public class MyExceptionHandler {
 
     @ExceptionHandler
     @ResponseBody
-    public CustomResult handleException(Exception e) {
+    public MyResponse handleException(Exception e) {
         log.error(e.getMessage(), e);
         if (e instanceof UnauthorizedException) {
-            return CustomResultUtil.fail(CustomResultCodeEnum.NO_PERMIT);
+            return MyResponseUtil.fail(MyResponseStatusEnum.UN_AUTHORIZATION);
         }
         if (e instanceof ExpiredCredentialsException) {
-            return CustomResultUtil.fail(CustomResultCodeEnum.TOKEN_EXPIRE);
+            return MyResponseUtil.fail(MyResponseStatusEnum.TOKEN_ERROR);
         }
         if (e instanceof IncorrectCredentialsException) {
-            return CustomResultUtil.fail(CustomResultCodeEnum.NO_TOKEN);
+            return MyResponseUtil.fail(MyResponseStatusEnum.TOKEN_ERROR);
         }
         if (e instanceof AuthenticationException) {
-            return CustomResultUtil.fail(CustomResultCodeEnum.LOG_IN_NO);
+            return MyResponseUtil.fail(MyResponseStatusEnum.UN_AUTHENTICATION);
         }
-        return CustomResultUtil.fail(CustomResultCodeEnum.EXCEPTION.getCode(), e.getCause().toString());
+        return MyResponseUtil.fail(MyResponseStatusEnum.SERVER_EXCEPTION, e.getCause().toString());
     }
 }

@@ -1,8 +1,8 @@
 package com.sxkj.uc.dao;
 
-import com.sxkj.uc.dao.base.BaseDao;
+import com.sxkj.common.base.BaseDao;
+import com.sxkj.common.util.code.DataStatusEnum;
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.util.code.DataStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class UserDao extends BaseDao<User> {
                 BeanUtils.populate(user, list.get(0));
                 return user;
             } catch (Exception e) {
-                log.error(e.getMessage(),e.getCause());
+                log.error(e.getMessage(), e.getCause());
             }
         }
         return null;

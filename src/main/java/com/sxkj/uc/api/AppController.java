@@ -1,11 +1,11 @@
 package com.sxkj.uc.api;
 
 import com.google.gson.Gson;
-import com.sxkj.uc.api.base.BaseController;
+import com.sxkj.common.base.BaseController;
+import com.sxkj.common.util.MyResponse;
+import com.sxkj.common.util.MyResponseUtil;
 import com.sxkj.uc.entity.App;
 import com.sxkj.uc.service.AppService;
-import com.sxkj.uc.util.CustomResult;
-import com.sxkj.uc.util.CustomResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -38,10 +38,10 @@ public class AppController implements BaseController<App> {
     @ApiImplicitParam(name = "app", value = "对象实例", dataType = "json")
     @Override
     @PostMapping("/create")
-    public CustomResult create(@RequestBody App app) {
+    public MyResponse create(@RequestBody App app) {
         app = appService.insert(app);
         log.info("add data: {}", new Gson().toJson(app));
-        return CustomResultUtil.success(app);
+        return MyResponseUtil.success(app);
     }
 
     /**
@@ -53,10 +53,10 @@ public class AppController implements BaseController<App> {
     @ApiOperation(value = "编辑", notes = "编辑接入的应用信息")
     @Override
     @PutMapping("/edit")
-    public CustomResult edit(@RequestBody App app) {
+    public MyResponse edit(@RequestBody App app) {
         app = appService.updateByPrimaryKey(app);
         log.info("eidt data : {}", app);
-        return CustomResultUtil.success(app);
+        return MyResponseUtil.success(app);
     }
 
     /**
@@ -68,18 +68,18 @@ public class AppController implements BaseController<App> {
     @ApiOperation(value = "查找")
     @Override
     @GetMapping("/find")
-    public CustomResult find(@RequestBody App app) {
+    public MyResponse find(@RequestBody App app) {
         App a = appService.findByPrimaryKey(app);
         System.err.println(a);
-        return CustomResultUtil.success(appService.findByPrimaryKey(app));
+        return MyResponseUtil.success(appService.findByPrimaryKey(app));
     }
 
     @Override
     @GetMapping("/list")
-    public CustomResult findList(@RequestBody App app) {
+    public MyResponse findList(@RequestBody App app) {
         List<Map<String, Object>> list = appService.findList(app);
         log.error(new Gson().toJson(list));
-        return CustomResultUtil.success(appService.findList(app));
+        return MyResponseUtil.success(appService.findList(app));
     }
 
     /**
@@ -90,8 +90,8 @@ public class AppController implements BaseController<App> {
      */
     @Override
     @DeleteMapping("/remove")
-    public CustomResult remove(@RequestBody App app) {
+    public MyResponse remove(@RequestBody App app) {
         appService.deleteByPrimaryKey(app);
-        return CustomResultUtil.success();
+        return MyResponseUtil.success();
     }
 }

@@ -1,9 +1,9 @@
 package com.sxkj.uc.interceptor;
 
-import com.sxkj.uc.entity.Token;
-import com.sxkj.uc.service.TokenService;
-import com.sxkj.uc.util.AppContext;
-import com.sxkj.uc.util.code.CustomResultCodeEnum;
+import com.sxkj.common.util.AppContext;
+import com.sxkj.common.util.code.MyResponseStatusEnum;
+import com.sxkj.uc.entity.OnLine;
+import com.sxkj.uc.service.AccessTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,17 +14,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @ClassName TokenInterceptor
+ * @ClassName AccessTokenInterceptor
  * @Description: 验证发起请求的用户是否登录，token是否有效，更新token
  * @Author zwd
  * @Date 2019/12/12 0012
  **/
 @Slf4j
-public class TokenInterceptor extends HandlerInterceptorAdapter {
+public class AccessTokenInterceptor extends HandlerInterceptorAdapter {
     @Value("${server.servlet.context-path}")
     private String contextPath;
     @Autowired
-    private TokenService tokenService;
+    private AccessTokenService tokenService;
 
     /**
      * 获取token，并验证token是否存在，是否超时，同时对合法的token进行更新
@@ -41,19 +41,19 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
         // 获取token
         String token = AppContext.getToken(request);
         // 获取token对象
-        Token sysToken = null;
+        OnLine onLine = null;
         System.err.println("request token : " + token);
         if (token != null && !"".equals(token)) {
-            sysToken = tokenService.findByToken(token);
+            onLine = tokenService.findByToken(token);
         }
-        if (tokenService.tokenCheck(sysToken, token)) {
+        if (tokenService.tokenCheck(onLine, token)) {
             String secret = AppContext.getSecretKey(request);
 
             // 更新token
-            tokenService.updateToken(sysToken);
+            tokenService.updateToken(onLine);
             return true;
         } else {
-            throw new ExpiredCredentialsException(CustomResultCodeEnum.TOKEN_EXPIRE.getCode());
+            throw new ExpiredCredentialsException(MyResponseStatusEnum.TOKEN_ERROR.getCode() + "");
         }
     }
 

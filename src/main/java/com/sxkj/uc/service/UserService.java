@@ -1,13 +1,13 @@
 package com.sxkj.uc.service;
 
+import com.sxkj.common.base.BaseService;
+import com.sxkj.common.util.MD5;
 import com.sxkj.uc.dao.AppDao;
 import com.sxkj.uc.dao.UserAppDao;
 import com.sxkj.uc.dao.UserDao;
 import com.sxkj.uc.entity.App;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.entity.UserApp;
-import com.sxkj.uc.service.base.BaseService;
-import com.sxkj.uc.util.MD5;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,22 +33,24 @@ public class UserService extends BaseService<User> {
 
     /**
      * 创建用户，处理登录密码
+     *
      * @param user
      * @return
      */
     @Override
     public User insert(User user) {
-        user.setPassword(MD5.encode2hex(user.getUsername()+user.getPassword()));
+        user.setPassword(MD5.encode2hex(user.getUsername() + user.getPassword()));
         try {
             return userDao.insert(user);
         } catch (Exception e) {
-            log.error(e.getMessage(),e.getCause());
+            log.error(e.getMessage(), e.getCause());
         }
         return null;
     }
 
     /**
      * 编辑用户信息，保留原有的登录名和登录密码
+     *
      * @param user
      * @return
      */
@@ -65,6 +67,7 @@ public class UserService extends BaseService<User> {
 
     /**
      * 修改登录密码
+     *
      * @param user
      * @return
      */
@@ -73,12 +76,13 @@ public class UserService extends BaseService<User> {
         User old = new User();
         old.setId(userId);
         old = userDao.findByPrimaryKey(old);
-        old.setPassword(MD5.encode2hex(old.getUsername()+user.getPassword()));
+        old.setPassword(MD5.encode2hex(old.getUsername() + user.getPassword()));
         return userDao.updateByPrimaryKey(old);
     }
 
     /**
      * 获取用户可访问应用列表
+     *
      * @param userId
      * @return
      */
@@ -101,8 +105,8 @@ public class UserService extends BaseService<User> {
         return result;
     }
 
-    public String hasPermit(String username){
-        String permit ;
+    public String hasPermit(String username) {
+        String permit;
         switch (username) {
             case "sun42":
                 permit = "user:all";

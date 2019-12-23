@@ -1,7 +1,7 @@
 package com.sxkj.uc.shiro;
 
 import com.google.gson.Gson;
-import com.sxkj.uc.util.code.CustomResultCodeEnum;
+import com.sxkj.common.util.code.MyResponseStatusEnum;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
@@ -69,9 +69,8 @@ public class AuthFilter extends AuthenticatingFilter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setCharacterEncoding("UTF-8");
-            Map<String, String> result = new HashMap<>(2);
-            result.put("code", CustomResultCodeEnum.NO_TOKEN.getCode());
-            result.put("msg", CustomResultCodeEnum.NO_TOKEN.getMsg());
+            Map<String, Integer> result = new HashMap<>(2);
+            result.put("code", MyResponseStatusEnum.TOKEN_ERROR.getCode());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
             return false;
@@ -89,9 +88,8 @@ public class AuthFilter extends AuthenticatingFilter {
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpResponse.setCharacterEncoding("UTF-8");
         try {
-            Map<String, String> result = new HashMap<>(2);
-            result.put("code", CustomResultCodeEnum.LOG_IN_FAIL.getCode());
-            result.put("msg", CustomResultCodeEnum.LOG_IN_FAIL.getMsg());
+            Map<String, Integer> result = new HashMap<>(2);
+            result.put("code", MyResponseStatusEnum.FAIL.getCode());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
         } catch (Exception e1) {

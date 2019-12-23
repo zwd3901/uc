@@ -1,10 +1,9 @@
 package com.sxkj.uc.entity;
 
-import com.sxkj.uc.entity.base.BaseEntity;
+import com.sxkj.common.base.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -16,13 +15,13 @@ import javax.persistence.Table;
 @Data
 public class UserApp extends BaseEntity {
 
-    @Column(name = "user_id",nullable = false)
+    @Column(name = "user_id", nullable = false)
     private String userId;
     @Column(name = "app_id", nullable = false)
     private String appId;
-    @Column(name = "login_name",nullable = false)
+    @Column(name = "login_name", nullable = false)
     private String loginName;
-    @Column(name = "login_password",nullable = false)
+    @Column(name = "login_password", nullable = false)
     private String loginPassword;
 
 }

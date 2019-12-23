@@ -1,7 +1,7 @@
 package com.sxkj.uc.shiro;
 
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.service.TokenService;
+import com.sxkj.uc.service.AccessTokenService;
 import com.sxkj.uc.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
@@ -20,7 +20,7 @@ public class MyRealm extends AuthorizingRealm {
     @Autowired
     private UserService userService;
     @Autowired
-    private TokenService tokenService;
+    private AccessTokenService tokenService;
 
     /**
      * 授权，验证用户权限或者角色时调用
@@ -43,6 +43,7 @@ public class MyRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
         String permit = userService.hasPermit(user.getUsername());
         info.addStringPermission(permit);
+        info.addRole("slaves");
         /* 添加角色和权限
         info.addRole();
         info.addStringPermission();

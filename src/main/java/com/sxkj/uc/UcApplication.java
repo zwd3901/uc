@@ -1,7 +1,7 @@
 package com.sxkj.uc;
 
 import com.spring4all.swagger.EnableSwagger2Doc;
-import com.sxkj.uc.interceptor.TokenInterceptor;
+import com.sxkj.uc.interceptor.AccessTokenInterceptor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -29,7 +29,7 @@ public class UcApplication implements WebMvcConfigurer {
     }
 
     @Bean
-    public TokenInterceptor tokenInterceptor() {
-        return new TokenInterceptor();
+    public AccessTokenInterceptor tokenInterceptor() {
+        return new AccessTokenInterceptor();
     }
 }

@@ -1,16 +1,17 @@
 package com.sxkj.uc.api;
 
+import com.sxkj.common.util.MyResponse;
+import com.sxkj.common.util.MyResponseUtil;
+import com.sxkj.common.util.code.MyResponseStatusEnum;
 import com.sxkj.uc.entity.User;
+import com.sxkj.uc.service.AccessTokenService;
 import com.sxkj.uc.service.LoginService;
-import com.sxkj.uc.service.TokenService;
-import com.sxkj.uc.util.CustomResult;
-import com.sxkj.uc.util.CustomResultUtil;
 import com.sxkj.uc.util.MyExceptionHandler;
-import com.sxkj.uc.util.code.CustomResultCodeEnum;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import java.util.Map;
  * @author zwd
  * 登录、退出
  */
-@Api(description = "登录、退出管理",tags = "sign")
+@Api(description = "登录、退出管理", tags = "sign")
 @RestController
 @Slf4j
 public class SignController {
@@ -33,55 +34,65 @@ public class SignController {
     @Autowired
     private MyExceptionHandler exceptionHandler;
     @Autowired
-    private TokenService tokenService;
-
+    private AccessTokenService tokenService;
 
 
     /**
      * 登录
+     *
      * @param user
      * @returnq
      */
-    @ApiOperation(value = "登录",notes = "传递用户名和密码")
-    @ApiImplicitParam(name = "user",value = "用户对象",required = true,dataType = "json")
+    @ApiOperation(value = "登录", notes = "传递用户名和密码")
+    @ApiImplicitParam(name = "user", value = "用户对象", required = true, dataType = "json")
     @GetMapping("/login")
-    public CustomResult login(User user) {
+    public MyResponse login(User user) {
         try {
             user = loginService.signIn(user.getUsername(), user.getPassword());
-            if (user == null) {
-                return CustomResultUtil.info(CustomResultCodeEnum.LOG_IN_FAIL);
-            }else {
-                String token = tokenService.createToken(user.getId());
-                Map<String, Object> map = new HashMap<>(16);
-                map.put("user", user);
-                map.put("token",token);
-                return CustomResultUtil.success(map);
-            }
-        }catch (Exception e) {
+            String token = tokenService.createToken(user.getId());
+            Map<String, Object> map = new HashMap<>(16);
+            map.put("user", user);
+            map.put("token", token);
+            return MyResponseUtil.success(map);
+        } catch (Exception e) {
             return exceptionHandler.handleException(e);
         }
     }
 
     /**
      * 退出系统，清理token
+     *
      * @param userId
      * @return
      */
     @GetMapping("/logout/{userId}")
-    public CustomResult logout(@PathVariable String userId) {
+    public MyResponse logout(@PathVariable String userId) {
         tokenService.deleteByUserId(userId);
 
-        return CustomResultUtil.success(CustomResultCodeEnum.LOG_OUT_SUCCESS);
+        return MyResponseUtil.success(MyResponseStatusEnum.SUCCESS);
+    }
+
+    @RequiresRoles("slave")
+    @GetMapping("/verify")
+    public MyResponse verify() {
+        /**
+         * TODO slave应用请求认证
+         * TODO 目前只要token检查通过即返回true，还需做访问权限检查
+         *
+         */
+
+
+        return MyResponseUtil.success();
     }
 
     @GetMapping("/index")
-    public CustomResult index(){
-        return CustomResultUtil.success();
+    public MyResponse index() {
+        return MyResponseUtil.success();
     }
 
     @GetMapping("/error")
-    public CustomResult error(){
-        return CustomResultUtil.success("error");
+    public MyResponse error() {
+        return MyResponseUtil.success("error");
     }
 
 }

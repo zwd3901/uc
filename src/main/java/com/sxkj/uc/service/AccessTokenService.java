@@ -1,13 +1,13 @@
 package com.sxkj.uc.service;
 
-import com.sxkj.uc.dao.TokenDao;
+import com.sxkj.common.base.BaseService;
+import com.sxkj.common.util.RandomString;
+import com.sxkj.common.util.UUIDGenerator;
+import com.sxkj.common.util.code.DataStatusEnum;
+import com.sxkj.uc.dao.OnLineDao;
 import com.sxkj.uc.dao.UserDao;
-import com.sxkj.uc.entity.Token;
+import com.sxkj.uc.entity.OnLine;
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.service.base.BaseService;
-import com.sxkj.uc.util.RandomString;
-import com.sxkj.uc.util.UUIDGenerator;
-import com.sxkj.uc.util.code.DataStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.ExpiredCredentialsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -23,14 +23,14 @@ import java.util.Map;
  */
 @Service
 @Slf4j
-public class TokenService extends BaseService<Token> {
+public class AccessTokenService extends BaseService<OnLine> {
     /**
      * 过期时长：12小时的毫秒数
      */
     private final static long EXPIRE = 43200000;
 
     @Autowired
-    private TokenDao tokenDao;
+    private OnLineDao onLineDao;
     @Autowired
     private UserDao userDao;
 
@@ -41,14 +41,14 @@ public class TokenService extends BaseService<Token> {
      */
     @Transactional(rollbackFor = Exception.class)
     public void deleteByUserId(String userId) {
-        Token sysToken = new Token();
-        sysToken.setUserId(userId);
-        List<Map<String, Object>> list = tokenDao.findList(sysToken);
+        OnLine onLine = new OnLine();
+        onLine.setUserId(userId);
+        List<Map<String, Object>> list = onLineDao.findList(onLine);
         if (list != null && list.size() > 0) {
             for (Map<String, Object> map : list) {
-                Token tmp = new Token();
+                OnLine tmp = new OnLine();
                 tmp.setId(map.get("id").toString());
-                tokenDao.deleteByPrimaryKey(tmp);
+                onLineDao.deleteByPrimaryKey(tmp);
             }
         }
 
@@ -67,12 +67,12 @@ public class TokenService extends BaseService<Token> {
         // 3、生成新的token
         String token = RandomString.getStr() + UUIDGenerator.generator() + System.nanoTime();
 
-        Token sysToken = new Token();
-        sysToken.setUserId(userId);
-        sysToken.setToken(token);
-        sysToken.setExpireTime(System.currentTimeMillis() + EXPIRE);
+        OnLine onLine = new OnLine();
+        onLine.setUserId(userId);
+        onLine.setToken(token);
+        onLine.setExpireTime(System.currentTimeMillis() + EXPIRE);
         // 3、保存token
-        tokenDao.insert(sysToken);
+        onLineDao.insert(onLine);
         // 4、返回字符串
         return token;
     }
@@ -84,8 +84,8 @@ public class TokenService extends BaseService<Token> {
      * @return true：过期，false：未过期
      */
     public boolean isExpire(String token) {
-        Token sysToken = findByToken(token);
-        int duration = expireDuration(sysToken);
+        OnLine onLine = findByToken(token);
+        int duration = expireDuration(onLine);
 
         return duration <= 0 ? true : false;
     }
@@ -93,25 +93,25 @@ public class TokenService extends BaseService<Token> {
     /**
      * 更新token过期时间
      *
-     * @param sysToken
+     * @param onLine
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public String updateToken(Token sysToken) {
+    public String updateToken(OnLine onLine) {
         log.info("更新token。。。。。。。。。。。。。。。。。。。。。");
-        sysToken.setExpireTime(System.currentTimeMillis() + EXPIRE);
-        sysToken = tokenDao.updateByPrimaryKey(sysToken);
-        return sysToken.getToken();
+        onLine.setExpireTime(System.currentTimeMillis() + EXPIRE);
+        onLine = onLineDao.updateByPrimaryKey(onLine);
+        return onLine.getToken();
     }
 
     /**
      * token过期时长
      *
-     * @param sysToken
+     * @param onLine
      * @return 当前时间与过期时间的时间差（秒）,大于0：token未过期，小等于0：token已过期
      */
-    public int expireDuration(Token sysToken) {
-        return (int) ((sysToken.getExpireTime() - System.currentTimeMillis()) / 1000);
+    public int expireDuration(OnLine onLine) {
+        return (int) ((onLine.getExpireTime() - System.currentTimeMillis()) / 1000);
     }
 
     /**
@@ -121,10 +121,10 @@ public class TokenService extends BaseService<Token> {
      * @return
      */
     public User findUserByToken(String token) {
-        Token sysToken = new Token();
-        sysToken.setToken(token);
-        sysToken.setStatus(DataStatusEnum.USABLE.getCode());
-        List<Map<String, Object>> list = tokenDao.findList(sysToken);
+        OnLine onLine = new OnLine();
+        onLine.setToken(token);
+        onLine.setStatus(DataStatusEnum.USABLE.getCode());
+        List<Map<String, Object>> list = onLineDao.findList(onLine);
         if (list != null && list.size() > 0) {
             User user = new User();
             user.setId(list.get(0).get("userId").toString());
@@ -141,18 +141,18 @@ public class TokenService extends BaseService<Token> {
      * @param userId
      * @return
      */
-    public Token findByUserId(String userId) {
-        Token sysToken = new Token();
-        sysToken.setUserId(userId);
-        sysToken.setStatus(DataStatusEnum.USABLE.getCode());
-        List<Map<String, Object>> list = tokenDao.findList(sysToken);
+    public OnLine findByUserId(String userId) {
+        OnLine onLine = new OnLine();
+        onLine.setUserId(userId);
+        onLine.setStatus(DataStatusEnum.USABLE.getCode());
+        List<Map<String, Object>> list = onLineDao.findList(onLine);
         if (list == null || list.size() == 0) {
             return null;
         }
-        sysToken = new Token();
-        sysToken.setId(list.get(0).get("id").toString());
+        onLine = new OnLine();
+        onLine.setId(list.get(0).get("id").toString());
 
-        return tokenDao.findByPrimaryKey(sysToken);
+        return onLineDao.findByPrimaryKey(onLine);
     }
 
     /**
@@ -161,26 +161,26 @@ public class TokenService extends BaseService<Token> {
      * @param token
      * @return
      */
-    public Token findByToken(String token) {
-        Token sysToken = new Token();
-        sysToken.setToken(token);
-        List<Map<String, Object>> list = tokenDao.findList(sysToken);
+    public OnLine findByToken(String token) {
+        OnLine onLine = new OnLine();
+        onLine.setToken(token);
+        List<Map<String, Object>> list = onLineDao.findList(onLine);
         if (list == null || list.size() == 0) {
             return null;
         }
-        sysToken = new Token();
-        sysToken.setId(list.get(0).get("id").toString());
-        return tokenDao.findByPrimaryKey(sysToken);
+        onLine = new OnLine();
+        onLine.setId(list.get(0).get("id").toString());
+        return onLineDao.findByPrimaryKey(onLine);
     }
 
-    public boolean tokenCheck(Token sysToken, String token) throws Exception {
-        if (sysToken == null || token == null || "".equals(token)) {
+    public boolean tokenCheck(OnLine onLine, String token) throws Exception {
+        if (onLine == null || token == null || "".equals(token)) {
             log.info("token检查，没有token");
             throw new IncorrectCredentialsException();
         }
         // 判断token是否过期
         long now = System.currentTimeMillis();
-        long expireTime = sysToken.getExpireTime();
+        long expireTime = onLine.getExpireTime();
         if (expireTime - now <= 0) {
             log.info("token已过期");
             throw new ExpiredCredentialsException();

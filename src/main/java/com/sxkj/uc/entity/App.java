@@ -1,6 +1,6 @@
 package com.sxkj.uc.entity;
 
-import com.sxkj.uc.entity.base.BaseEntity;
+import com.sxkj.common.base.BaseEntity;
 import lombok.Data;
 
 import javax.persistence.Column;

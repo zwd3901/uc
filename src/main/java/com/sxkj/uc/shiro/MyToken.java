@@ -1,7 +1,7 @@
 package com.sxkj.uc.shiro;
 
 import com.google.gson.Gson;
-import com.sxkj.uc.util.RandomString;
+import com.sxkj.common.util.RandomString;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletResponse;
