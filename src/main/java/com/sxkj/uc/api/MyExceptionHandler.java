@@ -1,8 +1,8 @@
 package com.sxkj.uc.util;
 
-import com.sxkj.common.util.MyResponse;
-import com.sxkj.common.util.MyResponseUtil;
-import com.sxkj.common.util.code.MyResponseStatusEnum;
+import com.sxkj.common.params.ResponseEnum;
+import com.sxkj.common.response.MyResponse;
+import com.sxkj.common.response.MyResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.ExpiredCredentialsException;
@@ -25,17 +25,17 @@ public class MyExceptionHandler {
     public MyResponse handleException(Exception e) {
         log.error(e.getMessage(), e);
         if (e instanceof UnauthorizedException) {
-            return MyResponseUtil.fail(MyResponseStatusEnum.UN_AUTHORIZATION);
+            return MyResponseUtil.fail(ResponseEnum.UN_AUTHORIZATION);
         }
         if (e instanceof ExpiredCredentialsException) {
-            return MyResponseUtil.fail(MyResponseStatusEnum.TOKEN_ERROR);
+            return MyResponseUtil.fail(ResponseEnum.TOKEN_ERROR);
         }
         if (e instanceof IncorrectCredentialsException) {
-            return MyResponseUtil.fail(MyResponseStatusEnum.TOKEN_ERROR);
+            return MyResponseUtil.fail(ResponseEnum.TOKEN_ERROR);
         }
         if (e instanceof AuthenticationException) {
-            return MyResponseUtil.fail(MyResponseStatusEnum.UN_AUTHENTICATION);
+            return MyResponseUtil.fail(ResponseEnum.UN_AUTHENTICATION);
         }
-        return MyResponseUtil.fail(MyResponseStatusEnum.SERVER_EXCEPTION, e.getCause().toString());
+        return MyResponseUtil.fail(ResponseEnum.SERVER_EXCEPTION);
     }
 }
