@@ -1,17 +1,15 @@
 package com.sxkj.uc.api;
 
-import com.sxkj.common.util.MyResponse;
-import com.sxkj.common.util.MyResponseUtil;
-import com.sxkj.common.util.code.MyResponseStatusEnum;
+import com.sxkj.common.params.ResponseEnum;
+import com.sxkj.common.response.MyResponse;
+import com.sxkj.common.response.MyResponseUtil;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.AccessTokenService;
 import com.sxkj.uc.service.LoginService;
-import com.sxkj.uc.util.MyExceptionHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,10 +67,15 @@ public class SignController {
     public MyResponse logout(@PathVariable String userId) {
         tokenService.deleteByUserId(userId);
 
-        return MyResponseUtil.success(MyResponseStatusEnum.SUCCESS);
+        return MyResponseUtil.success(ResponseEnum.SUCCESS);
     }
 
-    @RequiresRoles("slave")
+    /**
+     * slave端验证，通过shiro realm验证token
+     *
+     * @return
+     */
+//    @RequiresRoles("slave")
     @GetMapping("/verify")
     public MyResponse verify() {
         /**
@@ -84,15 +87,4 @@ public class SignController {
 
         return MyResponseUtil.success();
     }
-
-    @GetMapping("/index")
-    public MyResponse index() {
-        return MyResponseUtil.success();
-    }
-
-    @GetMapping("/error")
-    public MyResponse error() {
-        return MyResponseUtil.success("error");
-    }
-
 }

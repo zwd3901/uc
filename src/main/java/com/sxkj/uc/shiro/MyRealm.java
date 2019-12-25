@@ -74,6 +74,7 @@ public class MyRealm extends AuthorizingRealm {
         if (user == null) {
             throw new IncorrectCredentialsException("用户不存在");
         }
+
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, token, getName());
         return info;
     }

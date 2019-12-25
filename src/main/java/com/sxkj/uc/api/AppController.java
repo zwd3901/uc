@@ -2,8 +2,8 @@ package com.sxkj.uc.api;
 
 import com.google.gson.Gson;
 import com.sxkj.common.base.BaseController;
-import com.sxkj.common.util.MyResponse;
-import com.sxkj.common.util.MyResponseUtil;
+import com.sxkj.common.response.MyResponse;
+import com.sxkj.common.response.MyResponseUtil;
 import com.sxkj.uc.entity.App;
 import com.sxkj.uc.service.AppService;
 import io.swagger.annotations.Api;
@@ -70,7 +70,6 @@ public class AppController implements BaseController<App> {
     @GetMapping("/find")
     public MyResponse find(@RequestBody App app) {
         App a = appService.findByPrimaryKey(app);
-        System.err.println(a);
         return MyResponseUtil.success(appService.findByPrimaryKey(app));
     }
 

@@ -1,4 +1,4 @@
-package com.sxkj.uc.util;
+package com.sxkj.uc.api;
 
 import com.sxkj.common.params.ResponseEnum;
 import com.sxkj.common.response.MyResponse;

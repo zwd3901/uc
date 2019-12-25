@@ -1,20 +1,25 @@
 package com.sxkj.uc.util.sql;
 
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class PageUtil {
 
-    /** 每页记录数 */
+    /**
+     * 每页记录数
+     */
     private int pageSize = 10;
-    /** 总记录数 */
+    /**
+     * 总记录数
+     */
     private int totalRow;
-    /** 当前页 */
+    /**
+     * 当前页
+     */
     private int currentPage = 1;
 
-    private int totalPage ;
+    private int totalPage;
 
     private String sql;
 
@@ -30,14 +35,15 @@ public class PageUtil {
     public void setSql() {
         if (currentPage == 1) {
             sql = " limit " + pageSize;
-        }else {
+        } else {
             sql = " limit " + (currentPage - 1) * pageSize + " " + pageSize;
         }
     }
+
     public void setTotalPage() {
         if (pageSize == 0) {
             totalPage = 0;
-        }else{
+        } else {
             if (totalRow % pageSize == 0) {
                 totalPage = totalRow / pageSize;
             } else {
@@ -48,9 +54,8 @@ public class PageUtil {
 
     public static void main(String[] args) {
         String sql = "select * from t_user where satus=1";
-        Page page = new Page(108,10,3);
+        Page page = new Page(108, 10, 3);
         PageUtil pu = new PageUtil(sql, page);
-        System.err.println(pu.getSql());
     }
 
     public int getPageSize() {

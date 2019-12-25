@@ -1,8 +1,8 @@
 package com.sxkj.uc.api;
 
 import com.sxkj.common.base.BaseController;
-import com.sxkj.common.util.MyResponse;
-import com.sxkj.common.util.MyResponseUtil;
+import com.sxkj.common.response.MyResponse;
+import com.sxkj.common.response.MyResponseUtil;
 import com.sxkj.uc.entity.UserApp;
 import com.sxkj.uc.service.UserAppService;
 import lombok.extern.slf4j.Slf4j;

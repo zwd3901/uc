@@ -105,7 +105,6 @@ public class AuthFilter extends AuthenticatingFilter {
      * @return
      */
     private String getRequestToken(HttpServletRequest request) {
-        System.err.println(request.getRequestURI());
         String token = request.getHeader("token");
         if (token == null || "".equals(token)) {
             token = request.getParameter("token");

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * @ClassName AccessTokenInterceptor
- * @Description: 验证发起请求的用户是否登录，token是否有效，更新token
+ * @Description: 验证发起请求的用户是否登录、token是否有效、token更新
  * @Author zwd
  * @Date 2019/12/12 0012
  **/
@@ -37,15 +37,15 @@ public class AccessTokenInterceptor extends HandlerInterceptorAdapter {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.err.println(request.getContextPath() + ".................................");
+        log.error(this.getClass() + "========================" + request.getRequestURI());
         // 获取token
         String token = AppContext.getToken(request);
         // 获取token对象
         OnLine onLine = null;
-        System.err.println("request token : " + token);
         if (token != null && !"".equals(token)) {
             onLine = tokenService.findByToken(token);
         }
+        // TODO 是否需要验证请求来源
         if (tokenService.tokenCheck(onLine, token)) {
             String secret = AppContext.getSecretKey(request);
 
@@ -56,6 +56,4 @@ public class AccessTokenInterceptor extends HandlerInterceptorAdapter {
             throw new ExpiredCredentialsException(MyResponseStatusEnum.TOKEN_ERROR.getCode() + "");
         }
     }
-
-
 }

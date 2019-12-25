@@ -1,8 +1,8 @@
 package com.sxkj.uc.api;
 
 import com.sxkj.common.base.BaseController;
-import com.sxkj.common.util.MyResponse;
-import com.sxkj.common.util.MyResponseUtil;
+import com.sxkj.common.response.MyResponse;
+import com.sxkj.common.response.MyResponseUtil;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -53,18 +53,18 @@ public class UserController implements BaseController<User> {
      */
     @Override
     @GetMapping("/find")
-    @RequiresPermissions("user:find")
     public MyResponse find(@RequestBody User user) {
         try {
             return MyResponseUtil.success(userService.findByPrimaryKey(user));
         } catch (Exception e) {
             e.printStackTrace();
-            return MyResponseUtil.fail(e.getMessage());
+            return MyResponseUtil.fail();
         }
 
 
     }
 
+    // todo shiro test
     @GetMapping("/find2/{id}")
     @RequiresPermissions("user:find")
     public MyResponse find2(@PathVariable String id) {
@@ -72,7 +72,19 @@ public class UserController implements BaseController<User> {
             return MyResponseUtil.success(id);
         } catch (Exception e) {
             e.printStackTrace();
-            return MyResponseUtil.fail(e.getMessage());
+            return MyResponseUtil.fail();
+        }
+
+
+    }
+
+    @GetMapping("/find3/{id}")
+    public MyResponse find3(@PathVariable String id) {
+        try {
+            return MyResponseUtil.success(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return MyResponseUtil.fail();
         }
 
 
@@ -111,6 +123,7 @@ public class UserController implements BaseController<User> {
         return MyResponseUtil.success(userService.updatePassword(user));
     }
 
+    // todo shiro test
     @GetMapping("/find/all")
     @RequiresPermissions("user:all")
     public MyResponse findList() {
