@@ -4,7 +4,6 @@ import com.sxkj.common.params.ResponseEnum;
 import com.sxkj.common.response.MyResponse;
 import com.sxkj.common.response.MyResponseUtil;
 import com.sxkj.uc.entity.User;
-import com.sxkj.uc.service.AccessTokenService;
 import com.sxkj.uc.service.LoginService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -31,8 +30,6 @@ public class SignController {
     private LoginService loginService;
     @Autowired
     private MyExceptionHandler exceptionHandler;
-    @Autowired
-    private AccessTokenService tokenService;
 
 
     /**
@@ -47,10 +44,8 @@ public class SignController {
     public MyResponse login(User user) {
         try {
             user = loginService.signIn(user.getUsername(), user.getPassword());
-            String token = tokenService.createToken(user.getId());
             Map<String, Object> map = new HashMap<>(16);
             map.put("user", user);
-            map.put("token", token);
             return MyResponseUtil.success(map);
         } catch (Exception e) {
             return exceptionHandler.handleException(e);
@@ -65,8 +60,6 @@ public class SignController {
      */
     @GetMapping("/logout/{userId}")
     public MyResponse logout(@PathVariable String userId) {
-        tokenService.deleteByUserId(userId);
-
         return MyResponseUtil.success(ResponseEnum.SUCCESS);
     }
 

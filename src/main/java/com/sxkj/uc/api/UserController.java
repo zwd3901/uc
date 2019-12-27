@@ -6,7 +6,6 @@ import com.sxkj.common.response.MyResponseUtil;
 import com.sxkj.uc.entity.User;
 import com.sxkj.uc.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +65,6 @@ public class UserController implements BaseController<User> {
 
     // todo shiro test
     @GetMapping("/find2/{id}")
-    @RequiresPermissions("user:find")
     public MyResponse find2(@PathVariable String id) {
         try {
             return MyResponseUtil.success(id);
@@ -125,7 +123,6 @@ public class UserController implements BaseController<User> {
 
     // todo shiro test
     @GetMapping("/find/all")
-    @RequiresPermissions("user:all")
     public MyResponse findList() {
         return MyResponseUtil.success(userService.findList(new User()));
     }

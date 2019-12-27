@@ -10,6 +10,10 @@ import com.sxkj.uc.entity.User;
 import com.sxkj.uc.entity.UserApp;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,13 +27,15 @@ import java.util.Map;
 @Service
 @Slf4j
 @Transactional(readOnly = true, rollbackFor = Exception.class)
-public class UserService extends BaseService<User> {
+public class UserService extends BaseService<User> implements UserDetailsService {
     @Autowired
     private UserDao userDao;
     @Autowired
     private UserAppDao userAppDao;
     @Autowired
     private AppDao appDao;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     /**
      * 创建用户，处理登录密码
@@ -119,5 +125,19 @@ public class UserService extends BaseService<User> {
                 break;
         }
         return permit;
+    }
+
+    public List<Map<String, Object>> findSlaveUser(String token, String secret) {
+        if (token == null || "".equals(token) || secret == null || "".equals(secret)) {
+            return null;
+        }
+        String sql = "select ua.login_name as name,ua.login_password as password from t_app as a,t_on_line as ol,t_user_app as ua " +
+                "where a.id=ua.app_id and ol.id=ua.user_id and ol.token=? and a.secret=?";
+        return jdbcTemplate.queryForList(sql, token, secret);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userDao.findByLonginName(username);
     }
 }

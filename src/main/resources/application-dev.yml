@@ -28,12 +28,14 @@ spring:
       pool-prepared-statements: true
       max-open-prepared-statements: 20
 
+master:
+  token:
+    refresh: expiry  # token更新策略，realtime：实时更新，每发起一次请求就更新一次token；expiry：临近过期时更新
 
 logging:
   level:
-    com.sxkj.idss.mapper: debug
-    com.sxkj.gaia.mapper: debug
-    org.springframework: error
-    org.apache: error
-    com.alibaba: error
-    springfox: error
+    com.sxkj: debug
+#    org.springframework: error
+#    org.apache: error
+#    com.alibaba: error
+#    springfox: error
