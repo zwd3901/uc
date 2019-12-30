@@ -13,7 +13,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author zwd
  */
 @EnableSwagger2Doc
-@SpringBootApplication
+@SpringBootApplication(exclude = {
+        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
+        org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration.class
+})
 @ServletComponentScan
 public class UcApplication implements WebMvcConfigurer {
 
