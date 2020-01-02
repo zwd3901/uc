@@ -1,7 +1,8 @@
 package com.sxkj.uc.shiro;
 
 import com.google.gson.Gson;
-import com.sxkj.common.util.code.MyResponseStatusEnum;
+import com.sxkj.common.params.ResponseEnum;
+import com.sxkj.common.util.AppContext;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
@@ -30,7 +31,7 @@ public class AuthFilter extends AuthenticatingFilter {
     @Override
     protected AuthenticationToken createToken(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
         // 获取请求的token
-        String token = getRequestToken((HttpServletRequest) servletRequest);
+        String token = AppContext.getToken((HttpServletRequest) servletRequest);
         if (token == null || "".equals(token)) {
             return null;
         }
@@ -64,13 +65,13 @@ public class AuthFilter extends AuthenticatingFilter {
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         //获取请求token，如果token不存在，直接返回
-        String token = getRequestToken((HttpServletRequest) request);
+        String token = AppContext.getToken((HttpServletRequest) request);
         if ("".equals(token)) {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setCharacterEncoding("UTF-8");
             Map<String, Integer> result = new HashMap<>(2);
-            result.put("code", MyResponseStatusEnum.TOKEN_ERROR.getCode());
+            result.put("code", ResponseEnum.TOKEN_ERROR.key());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
             return false;
@@ -89,7 +90,7 @@ public class AuthFilter extends AuthenticatingFilter {
         httpResponse.setCharacterEncoding("UTF-8");
         try {
             Map<String, Integer> result = new HashMap<>(2);
-            result.put("code", MyResponseStatusEnum.FAIL.getCode());
+            result.put("code", ResponseEnum.FAIL.key());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
         } catch (Exception e1) {
@@ -98,17 +99,4 @@ public class AuthFilter extends AuthenticatingFilter {
         return false;
     }
 
-    /**
-     * 获取请求的token
-     *
-     * @param request
-     * @return
-     */
-    private String getRequestToken(HttpServletRequest request) {
-        String token = request.getHeader("token");
-        if (token == null || "".equals(token)) {
-            token = request.getParameter("token");
-        }
-        return token == null ? "" : token;
-    }
 }

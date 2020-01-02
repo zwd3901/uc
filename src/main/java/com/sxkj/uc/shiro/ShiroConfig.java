@@ -13,6 +13,10 @@ import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author zwd
+ * shiro config
+ */
 @Configuration
 public class ShiroConfig {
 
