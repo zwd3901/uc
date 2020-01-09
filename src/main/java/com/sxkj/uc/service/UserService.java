@@ -87,7 +87,7 @@ public class UserService extends BaseService<User> {
      * @return
      */
     public List<App> findAppList(String userId) {
-        List<App> result = new ArrayList<>(16);
+        List<App> result = new ArrayList<App>(16);
         UserApp userApp = new UserApp();
         userApp.setUserId(userId);
         List<Map<String, Object>> list = userAppDao.findList(userApp);
@@ -107,16 +107,15 @@ public class UserService extends BaseService<User> {
 
     public String hasPermit(String username) {
         String permit;
-        switch (username) {
-            case "sun42":
-                permit = "user:all";
-                break;
-            case "zheng36":
-                permit = "user:find";
-                break;
-            default:
-                permit = "";
-                break;
+        if ("sun42".equals(username)) {
+            permit = "user:all";
+
+        } else if ("zheng36".equals(username)) {
+            permit = "user:find";
+
+        } else {
+            permit = "";
+
         }
         return permit;
     }

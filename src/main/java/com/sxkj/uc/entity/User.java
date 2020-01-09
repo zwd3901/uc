@@ -39,6 +39,6 @@ public class User extends BaseEntity {
     /**
      * 可访问应用
      */
-    private List<App> appList = new ArrayList<>(16);
+    private List<App> appList = new ArrayList<App>(16);
 
 }

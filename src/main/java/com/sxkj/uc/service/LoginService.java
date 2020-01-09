@@ -35,8 +35,8 @@ public class LoginService {
     public User signIn(String loginName, String loginPassword) {
         // 1、从t_user表根据登录名查找用户
         User user = userDao.findByLonginName(loginName);
-        List<Map<String, Object>> userAppList = new ArrayList<>(16);
-        List<App> appList = new ArrayList<>(16);
+        List<Map<String, Object>> userAppList = new ArrayList<Map<String, Object>>(16);
+        List<App> appList = new ArrayList<App>(16);
         // 2、如果t_user表中没有，在t_user_app中查找
         if (user == null) {
             UserApp userApp = new UserApp();

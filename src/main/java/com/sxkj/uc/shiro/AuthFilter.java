@@ -70,7 +70,7 @@ public class AuthFilter extends AuthenticatingFilter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
             httpResponse.setCharacterEncoding("UTF-8");
-            Map<String, Integer> result = new HashMap<>(2);
+            Map<String, Integer> result = new HashMap<String, Integer>(2);
             result.put("code", ResponseEnum.TOKEN_ERROR.key());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);
@@ -89,7 +89,7 @@ public class AuthFilter extends AuthenticatingFilter {
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpResponse.setCharacterEncoding("UTF-8");
         try {
-            Map<String, Integer> result = new HashMap<>(2);
+            Map<String, Integer> result = new HashMap<String, Integer>(2);
             result.put("code", ResponseEnum.FAIL.key());
             String json = new Gson().toJson(result);
             httpResponse.getWriter().print(json);

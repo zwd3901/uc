@@ -46,11 +46,11 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         //自定义过滤（关键）
-        Map<String, Filter> filters = new HashMap<>();
+        Map<String, Filter> filters = new HashMap<String, Filter>();
         filters.put("auth", new AuthFilter());
         shiroFilterFactoryBean.setFilters(filters);
 
-        Map<String, String> map = new HashMap<>(16);
+        Map<String, String> map = new HashMap<String, String>(16);
 
         map.put("/logout", "anon");
         map.put("/login", "anon");
